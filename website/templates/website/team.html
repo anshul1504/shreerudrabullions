@@ -1,0 +1,96 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<main class="main">
+
+    {# ================= PAGE HEADER ================= #}
+    {% if header %}
+    <div class="container">
+        <div class="page-header page-header-big text-center"
+             style="background-image: url('{{ header.background_image.url }}')">
+            <h1 class="page-title text-white">
+                {{ header.title }}
+                {% if header.subtitle %}
+                    <span class="text-white">{{ header.subtitle }}</span>
+                {% endif %}
+            </h1>
+        </div>
+    </div>
+    {% endif %}
+
+    {# ================= TEAM CONTENT ================= #}
+    <div class="page-content pb-5">
+        <div class="container">
+
+            <div class="heading text-center mb-5">
+                <h2 class="title">Meet Our Professional Team</h2>
+                <p class="title-desc">
+                    The people who make our company strong and successful
+                </p>
+            </div>
+
+            <div class="row justify-content-center">
+
+                {% for member in team %}
+                <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+                    <div class="member member-anim text-center">
+
+                        <figure class="member-media">
+                            <img src="{{ member.photo.url }}" alt="{{ member.name }}">
+
+                            <figcaption class="member-overlay">
+                                <div class="member-overlay-content">
+                                    <h3 class="member-title">
+                                        {{ member.name }}
+                                        <span>{{ member.designation }}</span>
+                                    </h3>
+
+                                    {% if member.description %}
+                                    <p>{{ member.description }}</p>
+                                    {% endif %}
+
+                                    <div class="social-icons social-icons-simple">
+                                        {% if member.facebook %}
+                                            <a href="{{ member.facebook }}" class="social-icon" target="_blank">
+                                                <i class="icon-facebook-f"></i>
+                                            </a>
+                                        {% endif %}
+                                        {% if member.twitter %}
+                                            <a href="{{ member.twitter }}" class="social-icon" target="_blank">
+                                                <i class="icon-twitter"></i>
+                                            </a>
+                                        {% endif %}
+                                        {% if member.instagram %}
+                                            <a href="{{ member.instagram }}" class="social-icon" target="_blank">
+                                                <i class="icon-instagram"></i>
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </figcaption>
+                        </figure>
+
+                        <div class="member-content">
+                            <h3 class="member-title">
+                                {{ member.name }}
+                                <span>{{ member.designation }}</span>
+                            </h3>
+                        </div>
+
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12 text-center">
+                    <p>No team members found.</p>
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+
+</main>
+
+{% endblock %}

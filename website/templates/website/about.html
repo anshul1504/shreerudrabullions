@@ -1,0 +1,120 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block content %}
+<main class="main about-page">
+
+    {# ================= HEADER ================= #}
+    {% if about %}
+    <div class="container">
+        <div class="page-header page-header-big text-center"
+             style="background-image: url('{{ about.header_background.url }}')">
+            <h1 class="page-title text-white">
+                {{ about.header_title }}
+                {% if about.header_subtitle %}
+                    <span class="text-white">{{ about.header_subtitle }}</span>
+                {% endif %}
+            </h1>
+        </div>
+    </div>
+    {% elif header %}
+    <div class="container">
+        <div class="page-header page-header-big text-center"
+             style="background-image: url('{{ header.background_image.url }}')">
+            <h1 class="page-title text-white">
+                {{ header.title }}
+                {% if header.subtitle %}
+                    <span class="text-white">{{ header.subtitle }}</span>
+                {% endif %}
+            </h1>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="page-content about-luxury-content">
+
+        {# ================= VISION / MISSION ================= #}
+        <section class="about-values-section">
+        <div class="container">
+            <div class="row about-values-row">
+                <div class="col-lg-6 mb-3 mb-lg-0">
+                    <div class="about-value-block">
+                    <p class="section-eyebrow">Our Direction</p>
+                    <h2 class="title">{{ about.vision_title }}</h2>
+                    <p>{{ about.vision_text }}</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="about-value-block">
+                    <p class="section-eyebrow">Our Promise</p>
+                    <h2 class="title">{{ about.mission_title }}</h2>
+                    <p>{{ about.mission_text }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </section>
+
+        {# ================= WHO WE ARE ================= #}
+        <section class="about-story-section">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-5 mb-3 mb-lg-0">
+                        <p class="section-eyebrow">Who We Are</p>
+                        <h2 class="title">{{ about.who_title }}</h2>
+                        <p class="lead text-primary mb-3">{{ about.who_subtitle }}</p>
+                        <p class="mb-2">{{ about.who_description }}</p>
+
+                        <a href="{{ about.who_button_url }}"
+                           class="btn btn-sm btn-minwidth btn-outline-primary-2">
+                            <span>{{ about.who_button_text }}</span>
+                            <i class="icon-long-arrow-right"></i>
+                        </a>
+                    </div>
+
+                    <div class="col-lg-6 offset-lg-1">
+                        <div class="about-images">
+                            <img src="{{ about.who_image_back.url }}" class="about-img-back" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {# ================= TESTIMONIALS ================= #}
+        <section class="about-testimonials">
+            <div class="container">
+                <p class="section-eyebrow text-center">Client Feedback</p>
+                <h2 class="title text-center mb-3">What Our Clients Say</h2>
+
+                <div class="owl-carousel owl-simple owl-testimonials-photo"
+                     data-toggle="owl"
+                     data-owl-options='{
+                        "nav": false,
+                        "dots": true,
+                        "margin": 24,
+                        "loop": false,
+                        "responsive": {
+                            "0": {"items": 1},
+                            "768": {"items": 1},
+                            "992": {"items": 2}
+                        }
+                     }'>
+                    {% for t in testimonials %}
+                    <blockquote class="testimonial text-center">
+                        <img src="{{ t.photo.url }}" alt="{{ t.name }}">
+                        <p>“ {{ t.message }} ”</p>
+                        <cite>
+                            {{ t.name }}
+                            <span>{{ t.role }}</span>
+                        </cite>
+                    </blockquote>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+    </div>
+</main>
+{% endblock %}

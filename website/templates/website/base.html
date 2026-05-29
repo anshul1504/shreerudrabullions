@@ -1,0 +1,498 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% if site %}{{ site.site_name }}{% else %}Shree Rudra Bullion{% endif %}</title>
+    <meta name="keywords" content="{% if site %}{{ site.meta_keywords }}{% endif %}">
+    <meta name="description" content="{% if site %}{{ site.meta_description }}{% endif %}">
+    <meta name="author" content="p-themes">
+    <!-- Favicon -->
+    {% if site and site.logo %}
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ site.logo.url }}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ site.logo.url }}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ site.logo.url }}">
+    {% endif %}
+    <link rel="manifest" href="{% static 'website/assets/images/icons/site.webmanifest' %}">
+    <link rel="mask-icon" href="{% static 'website/assets/images/icons/safari-pinned-tab.svg' %}" color="#666666">
+    <meta name="apple-mobile-web-app-title" content="{% if site %}{{ site.site_name }}{% else %}Shree Rudra Bullion{% endif %}">
+    <meta name="application-name" content="{% if site %}{{ site.site_name }}{% else %}Shree Rudra Bullion{% endif %}">
+    <meta name="theme-color" content="#ffffff">
+    <!-- Plugins CSS File -->
+    <link rel="stylesheet" href="{% static 'website/assets/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'website/assets/css/plugins/owl-carousel/owl.carousel.css' %}">
+    <link rel="stylesheet" href="{% static 'website/assets/css/plugins/magnific-popup/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{% static 'website/assets/css/plugins/jquery.countdown.css' %}">
+    <link rel="stylesheet" href="{% static 'website/assets/css/skins/skin-demo-8.css' %}">
+    <link rel="stylesheet" href="{% static 'website/assets/css/demos/demo-8.css' %}">
+    <!-- Main CSS File -->
+    <link rel="stylesheet" href="{% static 'website/assets/css/style.css' %}?v=2026052807">
+</head>
+
+<body>
+    <div class="rate-ticker-bar" aria-label="Bullion live rate ticker">
+        <div class="rate-ticker-track">
+            {% for pass in "12" %}
+                {% for item in rate_ticker_rows %}
+                    <span class="rate-ticker-item" data-header-rate-row="{{ item.key }}">
+                        <strong>{{ item.label }}</strong>
+                        <span data-header-rate-field="buy">{% if item.buy %}Rs {{ item.buy }}{% else %}-{% endif %}</span>
+                    </span>
+                {% endfor %}
+                {% for item in rate_ticker_rows %}
+                    <span class="rate-ticker-item" data-header-rate-row="{{ item.key }}">
+                        <strong>{{ item.label }}</strong>
+                        <span data-header-rate-field="buy">{% if item.buy %}Rs {{ item.buy }}{% else %}-{% endif %}</span>
+                    </span>
+                {% endfor %}
+                {% for item in rate_ticker_rows %}
+                    <span class="rate-ticker-item" data-header-rate-row="{{ item.key }}">
+                        <strong>{{ item.label }}</strong>
+                        <span data-header-rate-field="buy">{% if item.buy %}Rs {{ item.buy }}{% else %}-{% endif %}</span>
+                    </span>
+                {% endfor %}
+                {% for item in rate_ticker_rows %}
+                    <span class="rate-ticker-item" data-header-rate-row="{{ item.key }}">
+                        <strong>{{ item.label }}</strong>
+                        <span data-header-rate-field="buy">{% if item.buy %}Rs {{ item.buy }}{% else %}-{% endif %}</span>
+                    </span>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="page-wrapper">
+        <header class="header">
+            <div class="header-bottom sticky-header">
+                <div class="container">
+                    <div class="header-left">
+                        <button class="mobile-menu-toggler">
+                            <span class="sr-only">Toggle mobile menu</span>
+                            <i class="icon-bars"></i>
+                        </button>
+                        
+                        <a href="{% url 'website:home' %}" class="logo">
+                            {% if site and site.logo %}
+                            <img src="{{ site.logo.url }}" alt="{{ site.site_name }}" class="site-logo-img">
+                            {% else %}
+                            <img src="{% static 'website/assets/images/logo.png' %}" alt="Logo" class="site-logo-img">
+                            {% endif %}
+                            <span class="site-brand-text">
+                                <span class="site-brand-name">SHREE RUDRA BULLION &amp; JEWELS</span>
+                                <span class="site-brand-place">Jhabua MP</span>
+                            </span>
+                        </a>
+                    </div>
+                    <div class="header-center">
+                        <nav class="main-nav">
+                            <ul class="menu sf-arrows">
+                                <li class="megamenu-container {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+                                    <a href="{% url 'website:home' %}">Home</a>
+
+                                </li>
+                               <li class="{% if request.resolver_match.url_name == 'category_list' or request.resolver_match.url_name == 'category' or request.resolver_match.url_name == 'product_detail' or request.resolver_match.url_name == 'shop' %}active{% endif %}">
+                                    <a href="{% url 'website:category_list' %}">Products</a>
+
+                                    <div class="megamenu megamenu-md">
+                                        <div class="menu-col">
+
+                                            <div class="menu-flex">
+
+                                                <!-- PRODUCT CATEGORIES -->
+                                                <div class="menu-block">
+                                                    <div class="menu-title">Trading Categories</div>
+                                                    <ul>
+                                                        {% for cat in menu_categories %}
+                                                        <li>
+                                                            <a href="{% url 'website:category' cat.slug %}">
+                                                                {{ cat.title }}
+                                                            </a>
+                                                        </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+
+                                                <!-- PRODUCTS PAGES -->
+                                                <div class="menu-block">
+                                                    <div class="menu-title">Dealer Actions</div>
+                                                    <ul>
+                                                        <li><a href="{% url 'website:category_list' %}">View Inventory</a></li>
+                                                        <li><a href="{% url 'website:contact' %}">Request Bulk Quote</a></li>
+                                                    </ul>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </li>
+
+
+                                <li class="{% if request.resolver_match.url_name == 'about' %}active{% endif %}">
+                                    <a href="{% url 'website:about' %}">About</a>
+                                   
+                                </li>
+                                <li class="{% if request.resolver_match.url_name == 'bullion_rates' or request.resolver_match.url_name == 'bullion_rates_home' %}active{% endif %}"><a href="{% url 'website:bullion_rates' %}">Live Rates</a></li>
+                                <li class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}"><a href="{% url 'website:contact' %}">Contact</a></li>
+
+
+                            </ul><!-- End .menu -->
+                        </nav><!-- End .main-nav -->
+                    </div><!-- End .header-left -->
+
+                   
+                </div><!-- End .container -->
+            </div><!-- End .header-bottom -->
+        </header><!-- End .header -->
+
+
+
+
+
+  <!-- MAIN CONTENT -->
+    {% block content %}
+    {% endblock %}
+
+
+           <footer class="footer footer-2">
+            <div class="footer-middle">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-12 col-lg-6">
+                            <div class="widget widget-about">
+                                {% if site and site.footer_logo %}
+                                <img src="{{ site.footer_logo.url }}" class="footer-logo" alt="Footer Logo" width="82" height="25">
+                                {% elif site and site.logo %}
+                                <img src="{{ site.logo.url }}" class="footer-logo" alt="Footer Logo" width="82" height="25">
+                                {% else %}
+                                <img src="{% static 'website/assets/images/logo.png' %}" class="footer-logo" alt="Footer Logo" width="82" height="25">
+                                {% endif %}
+                                {% if site %}<p>{{ site.footer_text }}</p>{% endif %}
+                                
+                                <div class="widget-about-info">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-4">
+                                            <span class="widget-about-title">Need bullion assistance? Call us</span>
+                                            {% for number in footer_phone_numbers %}
+                                            <a href="tel:{{ number }}"><i class="icon-phone"></i> {{ number }}</a>
+                                            {% endfor %}
+                                            {% if site and site.email %}<a href="mailto:{{ site.email }}"><i class="icon-envelope"></i> {{ site.email }}</a>{% endif %}
+                                        </div>
+                                    </div><!-- End .row -->
+                                </div><!-- End .widget-about-info -->
+                            </div><!-- End .widget about-widget -->
+                        </div><!-- End .col-sm-12 col-lg-3 -->
+
+                        <div class="col-sm-4 col-lg-2">
+                            <div class="widget">
+                                <h4 class="widget-title">Company</h4>
+
+                                <ul class="widget-list">
+                                    <li>
+                                        <a href="{% url 'website:home' %}">Home</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'website:category_list' %}">Bullion & Jewellery</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'website:about' %}">About Desk</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'website:contact' %}">Contact Desk</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+
+                        <div class="col-sm-4 col-lg-2">
+                            <div class="widget">
+                                <h4 class="widget-title">Dealer Support</h4>
+
+                                <ul class="widget-list">
+                                    <li>
+                                        <a href="{% if footer_phone_numbers %}tel:{{ footer_phone_numbers.0 }}{% else %}{% url 'website:contact' %}{% endif %}">
+                                            Call Support
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{% if site and site.email %}mailto:{{ site.email }}{% else %}{% url 'website:contact' %}{% endif %}">
+                                            Email Support
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'website:contact' %}">
+                                            Bulk Quote
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="https://wa.me/{{ whatsapp_phone }}?text=Hello%2C%20I%20need%20support%20regarding%20your%20products."
+                                        target="_blank">
+                                            WhatsApp Support
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+
+                        <div class="col-sm-4 col-lg-2">
+                            <div class="widget">
+                                <h4 class="widget-title">Live Rate WhatsApp</h4><!-- End .widget-title -->
+
+                                <ul class="widget-list">
+                                    <li><a href="#">Scan The QR Code</a></li>
+                                    <li><a href="">
+                                        {% if site and site.whatsapp_qr %}
+                                            <img src="{{ site.whatsapp_qr.url }}"
+                                                alt="Chat with us on WhatsApp"
+                                                style="max-width:120px;">
+                                        {% endif %}
+                                    </a></li>
+                                </ul><!-- End .widget-list -->
+                            </div><!-- End .widget -->
+                        </div><!-- End .col-sm-64 col-lg-3 -->
+                    </div><!-- End .row -->
+                </div><!-- End .container -->
+            </div><!-- End .footer-middle -->
+
+            <div class="footer-bottom">
+                <div class="container">
+                    <p class="footer-copyright">&copy; 2026 Shree Rudra Bullion. Designed & Developed By <a href="https://www.thewebfix.in">The Webfix</a>.</p>
+                    
+
+                    <div class="social-icons social-icons-color">
+                        {% if site and site.facebook %}
+                        <span class="social-label">Social Media</span>
+
+                        
+                            <a href="{{ site.facebook }}" class="social-icon social-facebook" title="Facebook" target="_blank"><i class="icon-facebook-f"></i></a>
+                        {% endif %}
+
+                        {% if site and site.instagram %}
+                            <a href="{{ site.instagram }}" class="social-icon social-instagram" title="Instagram" target="_blank"><i class="icon-instagram"></i></a>
+                        {% endif %}
+                        {% if site and site.twitter %}
+                            <a href="{{ site.twitter }}" class="social-icon social-twitter" title="Twitter" target="_blank"><i class="icon-twitter"></i></a>
+                        {% endif %}
+
+                        {% if site and site.youtube %}
+                            <a href="{{ site.youtube }}" class="social-icon social-youtube" title="Youtube" target="_blank"><i class="icon-youtube"></i></a>
+                        {% endif %}
+                    </div><!-- End .soial-icons -->
+                </div><!-- End .container -->
+            </div><!-- End .footer-bottom -->
+        </footer><!-- End .footer -->
+    </div><!-- End .page-wrapper -->
+    {% if whatsapp_phone %}
+    <a href="https://wa.me/{{ whatsapp_phone }}?text=Hello%2C%20I%20need%20support%20regarding%20your%20products."
+       class="floating-whatsapp"
+       title="Chat on WhatsApp"
+       aria-label="Chat on WhatsApp"
+       target="_blank"
+       rel="noopener">
+        <i class="icon-whatsapp"></i>
+    </a>
+    {% endif %}
+    {% if site and site.phone %}
+    <a href="tel:{{ site.phone }}"
+       class="floating-call"
+       title="Call now"
+       aria-label="Call now">
+        <i class="icon-phone"></i>
+    </a>
+    {% endif %}
+    <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu-overlay"></div><!-- End .mobil-menu-overlay -->
+
+    <div class="mobile-menu-container">
+        <div class="mobile-menu-wrapper">
+            <span class="mobile-menu-close"><i class="icon-close"></i></span>
+
+           
+       <nav class="mobile-nav">
+    <ul class="mobile-menu">
+
+        <!-- HOME -->
+        <li class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+            <a href="{% url 'website:home' %}">Home</a>
+        </li>
+
+        <!-- PRODUCTS WITH DROPDOWN -->
+        <li class="{% if request.resolver_match.url_name == 'category_list' or request.resolver_match.url_name == 'category' or request.resolver_match.url_name == 'product_detail' or request.resolver_match.url_name == 'shop' %}active{% endif %}">
+            <a href="{% url 'website:category_list' %}">
+                Products
+            </a>
+
+            <!-- DROPDOWN -->
+            <ul>
+
+                <!-- ALL PRODUCTS -->
+                <li>
+                    <a href="{% url 'website:category_list' %}">
+                        View Inventory
+                    </a>
+                </li>
+
+                <!-- CATEGORIES -->
+                {% for cat in menu_categories %}
+                <li>
+                    <a href="{% url 'website:category' cat.slug %}">
+                        {{ cat.title }}
+                    </a>
+                </li>
+                {% endfor %}
+
+                <!-- EXTRA LINKS -->
+                <li>
+                    <a href="{% url 'website:contact' %}">
+                        Request Bulk Quote
+                    </a>
+                </li>
+
+            </ul>
+        </li>
+
+        <!-- ABOUT -->
+        <li class="{% if request.resolver_match.url_name == 'about' %}active{% endif %}">
+            <a href="{% url 'website:about' %}">About</a>
+        </li>
+        <li class="{% if request.resolver_match.url_name == 'bullion_rates' or request.resolver_match.url_name == 'bullion_rates_home' %}active{% endif %}">
+            <a href="{% url 'website:bullion_rates' %}">Live Rates</a>
+        </li>
+
+        <!-- CONTACT -->
+        <li class="{% if request.resolver_match.url_name == 'contact' %}active{% endif %}">
+            <a href="{% url 'website:contact' %}">Contact</a>
+        </li>
+
+    </ul>
+</nav>
+
+        </div><!-- End .mobile-menu-wrapper -->
+    </div><!-- End .mobile-menu-container -->
+
+
+
+
+  
+    <!-- Plugins JS File -->
+    <script src="{% static 'website/assets/js/jquery.min.js' %}"></script>
+    <script src="{% static 'website/assets/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'website/assets/js/jquery.hoverIntent.min.js' %}"></script>
+    <script src="{% static 'website/assets/js/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'website/assets/js/superfish.min.js' %}"></script>
+    <script src="{% static 'website/assets/js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'website/assets/js/jquery.plugin.min.js' %}"></script>
+    <script src="{% static 'website/assets/js/jquery.magnific-popup.min.js' %}"></script>
+    <script src="{% static 'website/assets/js/jquery.countdown.min.js' %}"></script>
+    <script src="{% static 'website/assets/js/jquery.elevateZoom.min.js' %}"></script>
+    <!-- Main JS File -->
+    <script src="{% static 'website/assets/js/main.js' %}"></script>
+    <script src="{% static 'website/assets/js/demos/demo-8.js' %}"></script>
+
+<script>
+$(document).ready(function () {
+
+    function initZoom() {
+        if ($('#product-zoom').length) {
+            $('#product-zoom').elevateZoom({
+                zoomType: "inner",
+                cursor: "crosshair"
+            });
+        }
+    }
+
+    initZoom();
+
+    $('.product-image-gallery').on('click', '.product-gallery-item', function (e) {
+        e.preventDefault();
+
+        var newImage = $(this).data('image');
+        var newZoomImage = $(this).data('zoom-image');
+
+        $('.product-gallery-item').removeClass('active');
+        $(this).addClass('active');
+
+        $('.zoomContainer').remove();
+        $('#product-zoom').removeData('elevateZoom');
+
+        $('#product-zoom')
+            .attr('src', newImage)
+            .attr('data-zoom-image', newZoomImage);
+
+        initZoom();
+    });
+
+});
+</script>
+
+<script>
+(function () {
+    var dataUrl = "{% url 'website:bullion_rates_data' %}";
+    var refreshDelay = 3000;
+
+    function rateText(value) {
+        return value ? "Rs " + value : "-";
+    }
+
+    function updateHeaderTicker(rows) {
+        rows.forEach(function (row) {
+            document.querySelectorAll('[data-header-rate-row="' + row.key + '"]').forEach(function (item) {
+                var buy = item.querySelector('[data-header-rate-field="buy"]');
+                if (buy) {
+                    buy.textContent = rateText(row.buy);
+                }
+            });
+        });
+    }
+
+    function refreshHeaderTicker() {
+        fetch(dataUrl, {cache: "no-store"})
+            .then(function (response) {
+                if (!response.ok) {
+                    throw new Error("Header ticker refresh failed");
+                }
+                return response.json();
+            })
+            .then(function (data) {
+                updateHeaderTicker(data.our_rate_rows || data.rate_rows || []);
+            })
+            .catch(function () {});
+    }
+
+    window.setInterval(refreshHeaderTicker, refreshDelay);
+})();
+</script>
+
+    <script
+        defer
+        src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
+        integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
+        data-cf-beacon='{
+            "version": "2024.11.0",
+            "token": "ecd4920e43e14654b78e65dbf8311922",
+            "r": 1,
+            "server_timing": {
+                "name": {
+                    "cfCacheStatus": true,
+                    "cfEdge": true,
+                    "cfExtPri": true,
+                    "cfL4": true,
+                    "cfOrigin": true,
+                    "cfSpeedBrain": true
+                },
+                "location_startswith": null
+            }
+        }'
+        crossorigin="anonymous">
+    </script>
+
+</body>
+
+</html>
+

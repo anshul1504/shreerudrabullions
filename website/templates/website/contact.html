@@ -1,0 +1,169 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<main class="main contact-page">
+
+    {% if header %}
+    <div class="container">
+        <div class="page-header page-header-big text-center"
+             style="background-image: url('{{ header.background_image.url }}')">
+            <h1 class="page-title text-white">
+                {{ header.title }}
+                <span class="text-white">{{ header.subtitle }}</span>
+            </h1>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="page-content pb-0 contact-luxury-content">
+        <div class="container">
+            <div class="contact-shell">
+            <div class="row align-items-stretch">
+
+                <!-- LEFT INFO -->
+                <div class="col-lg-6 mb-2 mb-lg-0 contact-left">
+                    <div class="contact-info-panel">
+                    <p class="section-eyebrow">Contact Desk</p>
+                    <h2 class="title mb-1">Jewellery & Bullion Support</h2>
+                    <p class="mb-3 contact-lead">
+                        We help customers with jewellery purchases, custom orders, and bullion enquiries for gold and silver. Share your requirement and our team will assist you with pricing and availability.
+
+                    </p>
+
+                    <div class="row contact-detail-grid">
+                        <div class="col-sm-12">
+                            <div class="contact-info">
+
+                                <ul class="contact-list">
+                                    <li>
+                                        <i class="icon-map-marker"></i>
+                                        {{ site.address }}
+                                    </li>
+                                    <li>
+                                        <i class="icon-phone"></i>
+                                        <a href="tel:{{ site.phone }}">{{ site.phone }}</a>
+                                    </li>
+                                    <li>
+                                        <i class="icon-envelope"></i>
+                                        <a href="mailto:{{ site.email }}">{{ site.email }}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        
+                    </div>
+                    </div>
+                </div>
+
+                <!-- FORM -->
+                <div class="col-lg-6 contact-right">
+                    <div class="contact-form-panel">
+                    <p class="section-eyebrow">Request Assistance</p>
+                    <h2 class="title mb-1">Need Jewellery or Bullion Quote?</h2>
+                    <p class="mb-2 contact-lead">Use the form to request product details, live rates, and bulk order support.</p>
+                    {% if request.GET.submitted == "1" %}
+                    <div class="alert alert-success" role="alert">
+                        Thank you. Your enquiry has been submitted successfully.
+                    </div>
+                    {% endif %}
+
+                    <form method="post" class="contact-form mb-3 contact-form-modern">
+                        {% csrf_token %}
+
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <input type="text" name="name" class="form-control" placeholder="Name *" required>
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="email" name="email" class="form-control" placeholder="Email *" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <input type="tel" name="phone" class="form-control" placeholder="Phone">
+                            </div>
+                            <div class="col-sm-6">
+                                <select name="enquiry_type" class="form-control" required>
+                                    <option value="jewellery">Jewellery</option>
+                                    <option value="gold_bullion">Gold Bullion</option>
+                                    <option value="silver_bullion">Silver Bullion</option>
+                                    <option value="bulk_order">Bulk Order</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <input type="text" name="subject" class="form-control" placeholder="Subject">
+                            </div>
+                        </div>
+
+                        <textarea name="message" class="form-control" rows="4"
+                                  required placeholder="Message *"></textarea>
+
+                        <button type="submit" class="btn btn-outline-primary-2 btn-minwidth-sm">
+                            <span>SUBMIT</span>
+                            <i class="icon-long-arrow-right"></i>
+                        </button>
+                    </form>
+                    </div>
+                </div>
+
+            </div>
+            </div>
+
+            {% if stores %}
+            <hr class="contact-divider">
+
+
+            <div class="stores mb-4 mb-lg-5 contact-stores-section">
+                <p class="section-eyebrow text-center">Visit Us</p>
+                <h2 class="title text-center mb-3">Our Jewellery Showrooms</h2>
+
+                <div class="row">
+                    {% for store in stores %}
+                    <div class="col-lg-6">
+                        <div class="store">
+                            <div class="row">
+                                <div class="col-sm-5 col-xl-6">
+                                    <figure class="store-media mb-2 mb-lg-0">
+                                        <img src="{{ store.image.url }}" alt="image">
+                                    </figure><!-- End .store-media -->
+                                </div><!-- End .col-xl-6 -->
+
+                                <div class="col-sm-7 col-xl-6">
+                                    <div class="store-content">
+                                        <h3 class="store-title">{{ store.title }}</h3><!-- End .store-title -->
+
+                                        <address>
+                                            <i class="icon-map-marker"></i>
+                                            {{ store.address }}
+                                        </address>
+
+                                        {% if store.phone %}
+                                        <div>
+                                            <i class="icon-phone"></i>
+                                            <a href="tel:{{ store.phone }}">{{ store.phone }}</a>
+                                        </div>
+                                        {% endif %}
+
+                                    </div><!-- End .store-content -->
+                                </div><!-- End .col-xl-6 -->
+                            </div><!-- End .row -->
+                        </div><!-- End .store -->
+                    </div><!-- End .col-lg-6 -->
+                    {% endfor %}
+                </div><!-- End .row -->
+            </div><!-- End .stores -->
+            {% endif %}
+
+        </div>
+    </div>
+</main>
+
+{% endblock %}
+

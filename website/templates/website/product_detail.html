@@ -1,0 +1,206 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<main class="main">
+    <!-- ================= BREADCRUMB ================= -->
+    <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
+        <div class="container d-flex align-items-center">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{% url 'website:home' %}">Home</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{% url 'website:category_list' %}">Products</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    {{ product.title }}
+                </li>
+            </ol>
+        </div>
+    </nav>
+
+    <!-- ================= PAGE CONTENT ================= -->
+    <div class="page-content product-page">
+        <div class="container">
+
+            <!-- ================= PRODUCT TOP ================= -->
+            <div class="product-details-top">
+                <div class="row">
+
+                    <!-- ========= PRODUCT IMAGES ========= -->
+                    <div class="col-md-6">
+                        <div class="product-gallery">
+                            <div class="row">
+
+                               <!-- Main Image -->
+                    <figure class="product-main-image">
+                        {% with product.images.first as main_img %}
+                            {% if main_img %}
+                                <img id="product-zoom"
+                                    src="{{ main_img.image.url }}"
+                                    data-zoom-image="{{ main_img.image.url }}"
+                                    alt="{{ product.title }}">
+                            {% else %}
+                                <img id="product-zoom"
+                                    src="{% static 'website/assets/landing-assets/images/lazy.png' %}"
+                                    data-zoom-image="{% static 'website/assets/landing-assets/images/lazy.png' %}"
+                                    alt="{{ product.title }}">
+                            {% endif %}
+                        {% endwith %}
+                    </figure>
+
+                    <!-- Thumbnails -->
+                    <div class="product-image-gallery">
+                        {% for img in product.images.all %}
+                        <a class="product-gallery-item {% if forloop.first %}active{% endif %}"
+                        href="#"
+                        data-image="{{ img.image.url }}"
+                        data-zoom-image="{{ img.image.url }}">
+                            <img src="{{ img.image.url }}" alt="{{ product.title }}">
+                        </a>
+                        {% endfor %}
+                    </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ========= PRODUCT DETAILS ========= -->
+                    <div class="col-md-6">
+                        <div class="product-details">
+
+                            <div class="product-cat mb-2">
+                                <a href="{% url 'website:category' product.category.slug %}">
+                                    {{ product.category.title }}
+                                </a>
+                                {% if product.subcategory %}
+                                <span> / {{ product.subcategory.title }}</span>
+                                {% endif %}
+                            </div>
+
+                            <h1 class="product-title">
+                                {{ product.title }}
+                            </h1>
+
+                            <div class="product-summary">
+                                <div class="summary-row"><span class="key">Category</span><span class="val">{{ product.category.title }}{% if product.subcategory %} / {{ product.subcategory.title }}{% endif %}</span></div>
+                                <div class="summary-row"><span class="key">Metal</span><span class="val">{{ product.get_metal_type_display }}</span></div>
+                                {% if product.weight %}<div class="summary-row"><span class="key">Weight</span><span class="val">{{ product.weight }} KG</span></div>{% endif %}
+                                {% if product.purity %}<div class="summary-row"><span class="key">Purity</span><span class="val">{{ product.purity }}</span></div>{% endif %}
+                                {% if product.hallmark %}<div class="summary-row"><span class="key">Hallmark</span><span class="val">{{ product.hallmark }}</span></div>{% endif %}
+                                {% if product.making_charges %}<div class="summary-row"><span class="key">Making Charges</span><span class="val">Rs. {{ product.making_charges }}</span></div>{% endif %}
+                            </div>
+
+                            <!-- PRICE -->
+                            <div class="product-price mb-2">
+                                {% if product.old_price %}
+                                    <span class="new-price">Rs. {{ product.price }}</span>
+                                    <span class="old-price">Rs. {{ product.old_price }}</span>
+                                {% else %}
+                                    Rs. {{ product.price }}
+                                {% endif %}
+                            </div>
+                            <div class="price-note">
+                                Indicative pricing. Final bullion/jewellery rate may vary with live market movement.
+                            </div>
+
+                            <!-- STOCK -->
+                            <div class="mb-2">
+                                {% if product.is_in_stock %}
+                                    <span class="stock-badge in">In Stock</span>
+                                {% else %}
+                                    <span class="stock-badge out">Out of Stock</span>
+                                {% endif %}
+                            </div>
+                            <ul class="trust-notes">
+                                <li>Live rate linked pricing support available.</li>
+                                <li>BIS/purity details shared transparently.</li>
+                                <li>Bulk quote available for dealer requirements.</li>
+                            </ul>
+
+                            <!-- SHORT DESCRIPTION -->
+                            {% if product.description %}
+                            <div class="product-content">
+                                {{ product.description|striptags|truncatewords:25 }}
+                            </div>
+                            {% endif %}
+
+
+                            <div class="shipping-box">
+                                <strong><i class="icon-truck"></i> Shipping:</strong>
+                                <div>{{ product.shipping_details|striptags|truncatewords:20 }}</div>
+                            </div>
+
+
+
+                            <!-- ACTION BUTTONS -->
+                            <div class="product-details-action mt-3">
+                                <a href="{% if site and site.phone %}tel:{{ site.phone }}{% else %}{% url 'website:contact' %}{% endif %}" class="btn btn-outline-primary">
+                                    <i class="icon-phone"></i>
+                                    <span>Make a Call</span>
+                                </a>
+
+                                <a href="https://wa.me/{{ whatsapp_phone }}?text=Hello%2C%20I%20am%20interested%20in%20the%20product%20{{ product.title }}.%20Please%20share%20more%20details."
+                                target="_blank"
+                                class="btn btn-outline-success ml-2">
+                                    <i class="icon-whatsapp"></i>
+                                    <span>Get Details on WhatsApp</span>
+                                </a>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ================= TABS ================= -->
+            <div class="product-details-tab mt-4">
+                <ul class="nav nav-pills justify-content-center" role="tablist">
+
+                    <li class="nav-item">
+                        <a class="nav-link active"
+                           data-toggle="tab"
+                           href="#product-desc"
+                           role="tab">
+                            Description
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           data-toggle="tab"
+                           href="#product-shipping"
+                           role="tab">
+                            Shipping
+                        </a>
+                    </li>
+
+                </ul>
+
+                <div class="tab-content mt-3">
+
+                    <!-- DESCRIPTION TAB -->
+                    <div class="tab-pane fade show active" id="product-desc" role="tabpanel">
+                        {{ product.description|safe }}
+                    </div>
+
+                    <!-- SHIPPING TAB -->
+                    <div class="tab-pane fade" id="product-shipping" role="tabpanel">
+                        {{ product.shipping_details|safe }}
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</main>
+
+
+{% endblock %}
+

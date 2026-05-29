@@ -1,0 +1,482 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<main class="main">
+            <div class="home-page">
+            <div class="intro-slider-container">
+                <div class="intro-slider owl-carousel owl-theme owl-nav-inside owl-light mb-0"
+                    data-toggle="owl"
+                    data-owl-options='{
+                        "dots": true,
+                        "nav": false,
+                        "responsive": {
+                            "1200": {
+                                "nav": true,
+                                "dots": false
+                            }
+                        }
+                    }'>
+
+                    {% for slide in sliders %}
+                    <div class="intro-slide"
+                        style="background-image: url('{{ slide.image.url }}');">
+
+                        {% if slide.link %}
+                        <a href="{{ slide.link }}" class="stretched-link"></a>
+                        {% endif %}
+
+                    </div>
+                    {% endfor %}
+
+                </div>
+
+                <span class="slider-loader"></span>
+            </div>
+<div class="service-marquee-wrap">
+                <div class="service-marquee-track">
+                    <span class="service-marquee-item"><span class="service-marquee-dot">•</span>Gold Coins & Bars</span>
+                    <span class="service-marquee-item"><span class="service-marquee-dot">•</span>Silver Coins, Bars & Utensils</span>
+                    <span class="service-marquee-item"><span class="service-marquee-dot">•</span>BIS Hallmarked Jewellery</span>
+                    <span class="service-marquee-item"><span class="service-marquee-dot">•</span>Certified Purity Assurance</span>
+                    <span class="service-marquee-item"><span class="service-marquee-dot">•</span>Live Gold & Silver Rates</span>
+                    <span class="service-marquee-item"><span class="service-marquee-dot">•</span>Bulk Dealer Pricing Support</span>
+                    <span class="service-marquee-item"><span class="service-marquee-dot">•</span>Quick WhatsApp Rate Assistance</span>
+
+                    <span class="service-marquee-item"><span class="service-marquee-dot">•</span>Gold Coins & Bars</span>
+                    <span class="service-marquee-item"><span class="service-marquee-dot">•</span>Silver Coins, Bars & Utensils</span>
+                    <span class="service-marquee-item"><span class="service-marquee-dot">•</span>BIS Hallmarked Jewellery</span>
+                    <span class="service-marquee-item"><span class="service-marquee-dot">•</span>Certified Purity Assurance</span>
+                    <span class="service-marquee-item"><span class="service-marquee-dot">•</span>Live Gold & Silver Rates</span>
+                    <span class="service-marquee-item"><span class="service-marquee-dot">•</span>Bulk Dealer Pricing Support</span>
+                    <span class="service-marquee-item"><span class="service-marquee-dot">•</span>Quick WhatsApp Rate Assistance</span>
+                </div>
+            </div>
+<section class="why-bullion-section">
+                <div class="container">
+                    <div class="why-bullion-head">
+                        <p class="section-eyebrow">Why Choose Us</p>
+                        <h2>India's Trusted Bullion Partner</h2>
+                        <p>Premium bullion and jewellery solutions with verified purity, transparent pricing, and dedicated dealer support.</p>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6 col-lg-4 mb-4">
+                            <div class="why-bullion-card">
+                                <span class="why-icon">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="4"></circle><path d="M9 13l-2 8 5-3 5 3-2-8"></path></svg>
+                                </span>
+                                <h4>BIS Certified</h4>
+                                <p>Hallmarked products with purity standards trusted by jewellery and bullion buyers.</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-4 mb-4">
+                            <div class="why-bullion-card">
+                                <span class="why-icon">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16"></path><path d="M6 16l4-5 3 3 5-6"></path><path d="M17 8h2v2"></path></svg>
+                                </span>
+                                <h4>Live Market Rates</h4>
+                                <p>Real-time gold and silver rates updated regularly for fast decision making.</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-4 mb-4">
+                            <div class="why-bullion-card">
+                                <span class="why-icon">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>
+                                </span>
+                                <h4>Secure Deals</h4>
+                                <p>Transparent billing, documented transactions, and zero hidden pricing surprises.</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-4 mb-4">
+                            <div class="why-bullion-card">
+                                <span class="why-icon">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 12l3 3a2 2 0 0 0 3 0l5-5"></path><path d="M3 10l4-4 5 5-4 4-5-5z"></path><path d="M21 10l-4-4-3 3"></path></svg>
+                                </span>
+                                <h4>Dealer Support</h4>
+                                <p>Dedicated assistance for bulk orders, rate checks, and repeat procurement flow.</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-4 mb-4">
+                            <div class="why-bullion-card">
+                                <span class="why-icon">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v8H3z"></path><path d="M14 10h4l3 3v2h-7z"></path><circle cx="7" cy="17" r="2"></circle><circle cx="18" cy="17" r="2"></circle></svg>
+                                </span>
+                                <h4>Fast Fulfilment</h4>
+                                <p>Prompt order processing and smooth delivery coordination for business buyers.</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-4 mb-4">
+                            <div class="why-bullion-card">
+                                <span class="why-icon">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v10H8l-4 4z"></path><path d="M8 9h8"></path><path d="M8 12h5"></path></svg>
+                                </span>
+                                <h4>Quick Response</h4>
+                                <p>Rapid quote and support via call or WhatsApp for urgent bullion requirements.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <div class="mt-4 mb-5 mb-xl-2"></div><!-- End .mb-3 -->
+
+            <div class="container new-arrivals featured-category-pro">
+                <div class="why-bullion-head mb-3">
+                    <p class="section-eyebrow">Featured Category</p>
+                    <h2>Explore Our Featured Categories</h2>
+                    <p>Discover curated bullion and jewellery categories selected for active retail and dealer demand.</p>
+                </div>
+
+                <div class="owl-carousel owl-simple featured-category-carousel"
+                    data-toggle="owl"
+                    data-owl-options='{
+                        "nav": false,
+                        "dots": true,
+                        "margin": 30,
+                        "loop": false,
+                        "smartSpeed": 500,
+                        "autoplayTimeout": 2500,
+                        "responsive": {
+                            "0": {
+                                "items": 1
+                            },
+                            "576": {
+                                "items": 1
+                            },
+                            "768": {
+                                "items": 2
+                            },
+                            "1200": {
+                                "items": 3
+                            }
+                        }
+                    }'>
+
+
+                    {% for cat in all_categories %}
+                    <div class="banner banner-overlay">
+
+                        <a href="{% url 'website:category' cat.slug %}">
+                            <img src="{{ cat.banner_image.url }}" alt="{{ cat.title }}">
+                        </a>
+
+                        <div class="banner-content">
+
+                            {% if cat.subtitle %}
+                            <h4 class="banner-subtitle d-none d-lg-block">
+                                <a href="{% url 'website:category' cat.slug %}">
+                                    {{ cat.subtitle }}
+                                </a>
+                            </h4>
+                            {% endif %}
+
+                            <h3 class="banner-title">
+                                <a href="{% url 'website:category' cat.slug %}">
+                                    {{ cat.title }}
+                                </a>
+                            </h3>
+
+                            <a href="{% url 'website:category' cat.slug %}"
+                            class="btn btn-outline-white banner-link">
+                                View Products <i class="icon-long-arrow-right"></i>
+                            </a>
+
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                </div>
+
+            </div>
+            
+            <div class="mb-5"></div><!-- End .mb-5 -->
+            
+            <div class="container recent-arrivals">
+                <div class="why-bullion-head products-head">
+                    <p class="section-eyebrow">Featured Collection</p>
+                    <h2>Our Products</h2>
+                    <p>Browse gold, silver, and hallmark jewellery collections.</p>
+                </div>
+
+                <div class="products-tabs-wrap">
+                    <ul class="nav nav-pills nav-border-anim justify-content-center" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#tab-all" role="tab">
+                                All
+                            </a>
+                        </li>
+
+                        {% for cat in categories %}
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tab-{{ cat.slug }}" role="tab">
+                                {{ cat.title }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="tab-content">
+
+                    <!-- ================= ALL PRODUCTS ================= -->
+                    <div class="tab-pane p-0 fade show active" id="tab-all" role="tabpanel">
+                        <div class="products">
+                            <div class="row justify-content-center product-inline-grid">
+
+                                {% for product in products %}
+                                <div class="col-6 col-md-4 col-lg-3">
+                                    <div class="product product-7 text-center">
+
+                                        <figure class="product-media">
+
+                                            {% if product.is_sale %}
+                                                <span class="product-label label-sale">Sale</span>
+                                            {% endif %}
+
+                                            <a href="{% url 'website:product_detail' product.slug %}">
+
+                                                {% with product.images.first as main_img %}
+                                                    {% if main_img %}
+                                                        <img src="{{ main_img.image.url }}"
+                                                            class="product-image"
+                                                            alt="{{ product.title }}">
+                                                    {% else %}
+                                                        <img src="{% static 'website/assets/landing-assets/images/lazy.png' %}"
+                                                            class="product-image"
+                                                            alt="{{ product.title }}">
+                                                    {% endif %}
+                                                {% endwith %}
+                                            </a>
+                                        </figure>
+
+                                        <div class="product-body">
+                                            <div class="product-cat">
+                                                <a href="{% url 'website:category' product.category.slug %}">
+                                                    {{ product.category.title }}
+                                                </a>
+                                            </div>
+
+                                            <h3 class="product-title">
+                                                <a href="{% url 'website:product_detail' product.slug %}">
+                                                    {{ product.title }}
+                                                </a>
+                                            </h3>
+
+                                            <div class="product-price">
+                                                {% if product.old_price %}
+                                                    <span class="new-price">Rs {{ product.price }}</span>
+                                                    <span class="old-price">Rs {{ product.old_price }}</span>
+                                                {% else %}
+                                                    Rs {{ product.price }}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                {% endfor %}
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ================= CATEGORY WISE PRODUCTS ================= -->
+                    {% for cat in categories %}
+                    <div class="tab-pane p-0 fade" id="tab-{{ cat.slug }}" role="tabpanel">
+                        <div class="products">
+                            <div class="row justify-content-center product-inline-grid">
+
+                                {% for product in cat.products.all %}
+                                    {% if product.is_active %}
+                                    <div class="col-6 col-md-4 col-lg-3">
+                                        <div class="product product-7 text-center">
+
+                                            <figure class="product-media">
+
+                                                {% if product.is_sale %}
+                                                    <span class="product-label label-sale">Sale</span>
+                                                {% endif %}
+
+                                                <a href="{% url 'website:product_detail' product.slug %}">
+
+                                                    {% with product.images.first as main_img %}
+                                                        {% if main_img %}
+                                                            <img src="{{ main_img.image.url }}"
+                                                                class="product-image"
+                                                                alt="{{ product.title }}">
+                                                        {% else %}
+                                                            <img src="{% static 'website/assets/landing-assets/images/lazy.png' %}"
+                                                                class="product-image"
+                                                                alt="{{ product.title }}">
+                                                        {% endif %}
+                                                    {% endwith %}
+                                                </a>
+
+                                            </figure>
+
+                                            <div class="product-body">
+                                                <div class="product-cat">
+                                                    <a href="{% url 'website:category' cat.slug %}">
+                                                        {{ cat.title }}
+                                                    </a>
+                                                </div>
+
+                                                <h3 class="product-title">
+                                                    <a href="{% url 'website:product_detail' product.slug %}">
+                                                        {{ product.title }}
+                                                    </a>
+                                                </h3>
+
+                                                <div class="product-price">
+                                                    {% if product.old_price %}
+                                                        <span class="new-price">Rs {{ product.price }}</span>
+                                                        <span class="old-price">Rs {{ product.old_price }}</span>
+                                                    {% else %}
+                                                        Rs {{ product.price }}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% empty %}
+                                    <p class="text-center w-100">No products available.</p>
+                                {% endfor %}
+
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                </div>
+
+                <div class="more-container text-center mt-3 mb-3">
+                    <a href="{% url 'website:category_list' %}"
+                    class="btn btn-outline-dark-3 btn-more">
+                        <span>View All Products</span>
+                        <i class="icon-long-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+            <section class="container commitment-section">
+                <div class="row align-items-center">
+                    <div class="col-lg-6 mb-4 mb-lg-0">
+                        <div class="commitment-card">
+                            <img src="https://images.firstpost.com/uploads/2026/01/image-2026-01-c86ad180f7820518707d3447b526d7a2-1200x675.jpg?im=FitAndFill=(596,336)" alt="Gold bars" class="commitment-top-image">
+                            <h3>Shree Rudra Bullion</h3>
+                            <p>Trusted bullion dealing with transparent pricing and verified product standards.</p>
+                            <div class="commitment-stats">
+                                <div class="commitment-stat"><h4 class="count-up" data-target="40" data-suffix="+">0</h4><span>Years</span></div>
+                                <div class="commitment-stat"><h4 class="count-up" data-target="999" data-suffix="">0</h4><span>Purity</span></div>
+                                <div class="commitment-stat"><h4 class="count-up" data-target="100" data-suffix="%">0</h4><span>BIS Focused</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="why-bullion-head text-left mb-3">
+                            <p class="section-eyebrow">Our Commitment</p>
+                            <h2 class="commitment-title">Why Investors Choose Us</h2>
+                        </div>
+                        <div class="commitment-points">
+                            <div class="point"><span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"></path></svg></span><div><h4>Real-Time Pricing</h4><p>Rates linked to market movement with timely updates.</p></div></div>
+                            <div class="point"><span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg></span><div><h4>Transparency First</h4><p>Clear pricing visibility before every transaction.</p></div></div>
+                            <div class="point"><span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 12l2 2 4-4"></path><circle cx="12" cy="12" r="9"></circle></svg></span><div><h4>Certified Products</h4><p>Bullion and hallmark details shared for confidence.</p></div></div>
+                            <div class="point"><span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.2 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.4 2.1L8.1 9.9a16 16 0 0 0 6 6l1.5-1.3a2 2 0 0 1 2.1-.4c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2.1z"></path></svg></span><div><h4>Expert Guidance</h4><p>Dedicated support for fast and reliable decisions.</p></div></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="container testimonials-section">
+                <div class="why-bullion-head mb-4">
+                    <p class="section-eyebrow">Testimonials</p>
+                    <h2>What Clients Say</h2>
+                    <p>Feedback from jewellery buyers and bullion dealers who trade with us regularly.</p>
+                </div>
+                {% if home_testimonials %}
+                <div class="owl-carousel owl-simple"
+                     data-toggle="owl"
+                     data-owl-options='{
+                        "nav": true,
+                        "dots": true,
+                        "margin": 20,
+                        "loop": true,
+                        "responsive": {
+                            "0": {"items": 1},
+                            "768": {"items": 2},
+                            "1200": {"items": 3}
+                        }
+                     }'>
+                    {% for t in home_testimonials %}
+                    <blockquote class="testimonial text-center">
+                        {% if t.photo %}
+                        <img src="{{ t.photo.url }}" alt="{{ t.name }}">
+                        {% else %}
+                        <img src="{% static 'website/assets/landing-assets/images/supporter.png' %}" alt="{{ t.name }}">
+                        {% endif %}
+                        <p>{{ t.message }}</p>
+                        <cite>
+                            {{ t.name }}
+                            <span>{{ t.role|default:"Customer" }}</span>
+                        </cite>
+                    </blockquote>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <p class="mb-0">No testimonials added yet.</p>
+                    </div>
+                </div>
+                {% endif %}
+            </section>
+            <section class="trust-strip">
+                <div class="container text-center">
+                    <span class="trust-badge"><i class="icon-check"></i> BIS Hallmarked</span>
+                    <span class="trust-badge"><i class="icon-check"></i> GST Registered</span>
+                    <span class="trust-badge"><i class="icon-check"></i> Transparent Pricing</span>
+                    <span class="trust-badge"><i class="icon-check"></i> Secure Billing</span>
+                    <span class="trust-badge"><i class="icon-check"></i> Verified Purity</span>
+                    <span class="trust-badge"><i class="icon-check"></i> Dealer Support</span>
+                </div>
+            </section>
+            <section class="container final-cta">
+                <div class="final-cta-wrap">
+                    <h3>Ready to Trade with Confidence?</h3>
+                    <p class="mb-3">Connect with our team for live rates, bulk quotes, and quick support.</p>
+                    <div class="final-cta-actions">
+                        <a href="{% if site and site.phone %}tel:{{ site.phone }}{% else %}{% url 'website:contact' %}{% endif %}" class="btn btn-light">Call Now</a>
+                        <a href="https://wa.me/{{ whatsapp_phone }}?text=Hi%2C%20I%20need%20today%27s%20live%20bullion%20rates." target="_blank" class="btn btn-outline-light">WhatsApp</a>
+                        <a href="{% url 'website:bullion_rates' %}" class="btn btn-dark">Live Rates</a>
+                    </div>
+                </div>
+            </section>
+            </div>
+        </main><!-- End .main -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    var counters = document.querySelectorAll(".count-up");
+    counters.forEach(function (el) {
+        var target = parseFloat(el.getAttribute("data-target") || "0");
+        var suffix = el.getAttribute("data-suffix") || "";
+        var startTime = null;
+        var duration = 1200;
+        function run(ts) {
+            if (!startTime) startTime = ts;
+            var progress = Math.min((ts - startTime) / duration, 1);
+            var val = target * progress;
+            el.textContent = Math.floor(val) + suffix;
+            if (progress < 1) requestAnimationFrame(run);
+        }
+        requestAnimationFrame(run);
+    });
+
+});
+</script>
+
+{% endblock %}
+
+
+
+

@@ -1,0 +1,340 @@
+    {% extends 'website/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<main class="main rb-rates-page rates-page">
+    {% if header %}
+    <div class="container">
+        <div class="page-header page-header-big text-center"
+             {% if header.background_image %}style="background-image: url('{{ header.background_image.url }}')"{% endif %}>
+            <h1 class="page-title text-white">
+                {{ header.title|default:"Live Bullion Rates" }}
+                <span class="text-white">{{ header.subtitle|default:"Gold and silver buy/sell rates updated from live market data." }}</span>
+            </h1>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="page-content">
+        <div class="container">
+            {% comment %}
+            <div class="rates-section-head">
+                <p class="section-eyebrow">Live Market Desk</p>
+                <h2 class="title mb-1">Bullion Rates</h2>
+                <p>
+                    Source: <span data-rate-source>{{ rate_source|default:"Unavailable" }}</span>
+                </p>
+            </div>
+
+            {% if request.GET.submitted == "1" %}
+            <div class="alert alert-success" role="alert">
+                Thank you. Your bullion rate enquiry has been submitted successfully.
+            </div>
+            {% endif %}
+
+            <div class="rates-refresh-bar">
+                <div class="live-status-wrap">
+                    <span class="live-dot"></span>
+                    <strong>LIVE</strong>
+                    <span>Updated: <span data-rate-updated>{{ rate_updated|default:"-" }}</span></span>
+                </div>
+                <div class="refresh-control">
+                    <span>Next live sync in <span data-refresh-countdown>3</span>s</span>
+                    <button type="button" class="refresh-btn" data-refresh-button>
+                        <i class="icon-refresh"></i>
+                        <span>Refresh</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="featured-strip market-rate-strip mb-3">
+                <div class="f-item">
+                    <span>Gold live base</span>
+                    <strong data-live-base="gold_999">
+                        {% for row in rate_rows %}
+                            {% if row.key == "gold_999" %}Rs {{ row.base|default:"-" }}{% endif %}
+                        {% endfor %}
+                    </strong>
+                    <small>Per 10 GM</small>
+                </div>
+                <div class="f-item">
+                    <span>Silver live base</span>
+                    <strong data-live-base="silver_peti_tukda">
+                        {% for row in rate_rows %}
+                            {% if row.key == "silver_peti_tukda" %}Rs {{ row.base|default:"-" }}{% endif %}
+                        {% endfor %}
+                    </strong>
+                    <small>Per 1 KG</small>
+                </div>
+            </div>
+
+            <div class="live-table-wrap">
+                <div class="live-table-head rate-item-head">
+                    <div>Product</div>
+                    <div>Buy</div>
+                    <div>Sell</div>
+                </div>
+
+                {% for row in rate_rows %}
+                <div class="live-row rate-item-row" data-rate-row="{{ row.key }}">
+                    <div>
+                        <div class="prod-name" data-rate-field="label">{{ row.label }}</div>
+                        <div class="prod-meta">
+                            <span class="pill" data-rate-field="metal">{{ row.metal }}</span>
+                            <span data-rate-field="formula">{{ row.formula }}</span>
+                        </div>
+                    </div>
+                    <div class="unit-box" data-rate-field="unit">{{ row.unit }}</div>
+                    <div class="side-box buy-box">
+                        <span class="side-label">Buy</span>
+                        <div class="side-value" data-rate-field="buy">{% if row.buy %}Rs {{ row.buy }}{% else %}-{% endif %}</div>
+                    </div>
+                    <div class="side-box sell-box">
+                        <span class="side-label">Sell</span>
+                        <div class="side-value" data-rate-field="sell">{% if row.sell %}Rs {{ row.sell }}{% else %}-{% endif %}</div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="live-row">
+                    <div>No live rate rows are configured.</div>
+                    <div></div>
+                    <div></div>
+                </div>
+                {% endfor %}
+            </div>
+
+            {% endcomment %}
+
+            <div class="featured-strip market-dollar-strip mb-3">
+                <div class="f-item">
+                    <span><i class="icon-dollar rate-card-icon" aria-hidden="true"></i>USD to INR Rate</span>
+                    <strong data-market-summary="usd_inr">
+                        {% if market_summary.usd_inr %}{{ market_summary.usd_inr }}{% else %}-{% endif %}
+                    </strong>
+                    <small>$ to INR</small>
+                </div>
+                <div class="f-item">
+                    <span><i class="icon-star rate-card-icon" aria-hidden="true"></i>Gold $</span>
+                    <strong data-market-summary="gold_usd">
+                        {% if market_summary.gold_usd %}$ {{ market_summary.gold_usd }}{% else %}-{% endif %}
+                    </strong>
+                    <small>Gold USD</small>
+                </div>
+                <div class="f-item">
+                    <span><i class="icon-star-o rate-card-icon" aria-hidden="true"></i>Silver $</span>
+                    <strong data-market-summary="silver_usd">
+                        {% if market_summary.silver_usd %}$ {{ market_summary.silver_usd }}{% else %}-{% endif %}
+                    </strong>
+                    <small>Silver USD</small>
+                </div>
+            </div>
+
+            <div class="featured-strip market-rate-strip mb-3">
+                <div class="f-item">
+                    <span><i class="icon-arrow-up rate-card-icon" aria-hidden="true"></i>Gold Future Live Rate</span>
+                    <strong data-live-base="gold_rtgs">
+                        {% for row in rate_rows %}
+                            {% if row.key == "gold_rtgs" %}{% if row.base %}Rs {{ row.base }}{% else %}-{% endif %}{% endif %}
+                        {% endfor %}
+                    </strong>
+                    <small>Per 10 GM</small>
+                </div>
+                <div class="f-item">
+                    <span><i class="icon-arrow-up rate-card-icon" aria-hidden="true"></i>Silver Future Live Rate</span>
+                    <strong data-live-base="silver_rtgs">
+                        {% for row in rate_rows %}
+                            {% if row.key == "silver_rtgs" %}{% if row.base %}Rs {{ row.base }}{% else %}-{% endif %}{% endif %}
+                        {% endfor %}
+                    </strong>
+                    <small>Per 1 KG</small>
+                </div>
+            </div>
+
+            <div class="rates-refresh-bar">
+                <div class="live-status-wrap">
+                    <strong class="live-status"><span aria-hidden="true"></span>LIVE</strong>
+                    <span><i class="icon-clock-o refresh-icon" aria-hidden="true"></i> Updated: <span data-rate-updated>{{ rate_updated|default:"-" }}</span></span>
+                </div>
+                <div class="refresh-control">
+                    <span>Next live sync in <span data-refresh-countdown>1</span>s</span>
+                    <button type="button" class="refresh-btn" data-refresh-button>
+                        <i class="icon-refresh" aria-hidden="true"></i> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <div class="rates-section-head">
+                <p class="section-eyebrow"> Live Market Desk</p>
+                <h2 class="title mb-1">Bullion Rates</h2>
+                <!--p>These values apply your admin formula settings on top of the live bullion rates.</p-->
+            </div>
+
+            <div class="live-table-wrap our-rates-board">
+                <div class="live-table-head rate-item-head">
+                    <div>Product</div>
+                    <div>Buy</div>
+                    <div>Sell</div>
+                </div>
+
+                {% for row in our_rate_rows %}
+                <div class="live-row rate-item-row" data-our-rate-row="{{ row.key }}">
+                    <div>
+                        <div class="prod-name" data-rate-field="label">{{ row.label }}</div>
+                        <div class="rate-unit-text" data-rate-field="unit">{{ row.unit }}</div>
+                    </div>
+                    <div class="side-box dealer-box">
+                        <span class="side-label"><i class="icon-arrow-down" aria-hidden="true"></i> Buy</span>
+                        <div class="side-value" data-rate-field="buy">{% if row.buy %}Rs {{ row.buy }}{% else %}-{% endif %}</div>
+                    </div>
+                    <div class="side-box dealer-box">
+                        <span class="side-label"><i class="icon-arrow-up" aria-hidden="true"></i> Sell</span>
+                        <div class="side-value" data-rate-field="sell">{% if row.key == 'silver_kacchi_50_90' %}-{% elif row.sell %}Rs {{ row.sell }}{% else %}-{% endif %}</div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="live-row">
+                    <div>Our rate formulas are not configured yet.</div>
+                    <div></div>
+                    <div></div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="rates-disclaimer mt-3">
+                Rates are indicative and may change without notice. Please confirm final dealing rates with the bullion desk before placing an order.
+            </div>
+
+        </div>
+    </div>
+</main>
+
+<script>
+(function () {
+    var dataUrl = "{% url 'website:bullion_rates_data' %}";
+    var rupeeFields = new Set(["buy", "sell", "base"]);
+    var refreshSeconds = 3;
+    var secondsLeft = refreshSeconds;
+    var countdownEl = document.querySelector("[data-refresh-countdown]");
+    var refreshButton = document.querySelector("[data-refresh-button]");
+    var previousSellRates = {};
+
+    function valueText(row, field) {
+        var value = row[field];
+        if (!value) {
+            return "-";
+        }
+        return rupeeFields.has(field) ? "Rs " + value : value;
+    }
+
+    function updateRows(selector, rows) {
+        rows.forEach(function (row) {
+            var el = document.querySelector(selector + '="' + row.key + '"]');
+            if (!el) {
+                return;
+            }
+            ["label", "metal", "formula", "unit", "high", "low", "buy", "sell"].forEach(function (field) {
+                var target = el.querySelector('[data-rate-field="' + field + '"]');
+                if (target) {
+                    if (row.key === "silver_kacchi_50_90" && field === "sell") {
+                        target.textContent = "-";
+                        target.classList.remove("rate-up", "rate-down");
+                        return;
+                    }
+                    target.textContent = valueText(row, field);
+                    if (field === "sell") {
+                        var currentSell = parseFloat(String(row.sell || "").replace(/,/g, ""));
+                        var previousKey = selector + ":" + row.key;
+                        target.classList.remove("rate-up", "rate-down");
+                        if (!isNaN(currentSell) && previousSellRates[previousKey] !== undefined) {
+                            if (currentSell > previousSellRates[previousKey]) {
+                                target.classList.add("rate-up");
+                            } else if (currentSell < previousSellRates[previousKey]) {
+                                target.classList.add("rate-down");
+                            }
+                        }
+                        if (!isNaN(currentSell)) {
+                            previousSellRates[previousKey] = currentSell;
+                        }
+                    }
+                }
+            });
+        });
+    }
+
+    function updateMarketSummary(summary) {
+        if (!summary) {
+            return;
+        }
+        [
+            ["usd_inr", ""],
+            ["gold_usd", "$ "],
+            ["silver_usd", "$ "]
+        ].forEach(function (item) {
+            var target = document.querySelector('[data-market-summary="' + item[0] + '"]');
+            if (target) {
+                target.textContent = summary[item[0]] ? item[1] + summary[item[0]] : "-";
+            }
+        });
+    }
+
+    function refreshRates() {
+        if (refreshButton) {
+            refreshButton.disabled = true;
+        }
+        fetch(dataUrl, {cache: "no-store"})
+            .then(function (response) {
+                if (!response.ok) {
+                    throw new Error("Rate refresh failed");
+                }
+                return response.json();
+            })
+            .then(function (data) {
+                var source = document.querySelector("[data-rate-source]");
+                var updated = document.querySelector("[data-rate-updated]");
+                if (source) {
+                    source.textContent = data.rate_source || "Unavailable";
+                }
+                if (updated) {
+                    updated.textContent = data.rate_updated || "-";
+                }
+                updateRows("[data-rate-row", data.rate_rows || []);
+                updateRows("[data-our-rate-row", data.our_rate_rows || []);
+                updateMarketSummary(data.market_summary);
+                (data.rate_rows || []).forEach(function (row) {
+                    var base = document.querySelector('[data-live-base="' + row.key + '"]');
+                    if (base) {
+                        base.textContent = valueText(row, "base");
+                    }
+                });
+            })
+            .catch(function () {})
+            .finally(function () {
+                secondsLeft = refreshSeconds;
+                if (countdownEl) {
+                    countdownEl.textContent = secondsLeft;
+                }
+                if (refreshButton) {
+                    refreshButton.disabled = false;
+                }
+            });
+    }
+
+    if (refreshButton) {
+        refreshButton.addEventListener("click", refreshRates);
+    }
+
+    window.setInterval(function () {
+        secondsLeft -= 1;
+        if (secondsLeft <= 0) {
+            refreshRates();
+            return;
+        }
+        if (countdownEl) {
+            countdownEl.textContent = secondsLeft;
+        }
+    }, 1000);
+})();
+</script>
+
+{% endblock %}
