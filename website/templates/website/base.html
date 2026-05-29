@@ -201,6 +201,9 @@
                                     <li>
                                         <a href="{% url 'website:contact' %}">Contact Desk</a>
                                     </li>
+                                    <li>
+                                        <a href="{% url 'website:privacy_policy' %}">Privacy Policy</a>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -431,6 +434,7 @@ $(document).ready(function () {
 });
 </script>
 
+{% if request.resolver_match.url_name == 'bullion_rates' or request.resolver_match.url_name == 'bullion_rates_home' %}
 <script>
 (function () {
     var dataUrl = "{% url 'website:bullion_rates_data' %}";
@@ -452,6 +456,9 @@ $(document).ready(function () {
     }
 
     function refreshHeaderTicker() {
+        if (document.hidden) {
+            return;
+        }
         fetch(dataUrl, {cache: "no-store"})
             .then(function (response) {
                 if (!response.ok) {
@@ -468,6 +475,7 @@ $(document).ready(function () {
     window.setInterval(refreshHeaderTicker, refreshDelay);
 })();
 </script>
+{% endif %}
 
     <script
         defer

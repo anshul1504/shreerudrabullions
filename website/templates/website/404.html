@@ -1,0 +1,26 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block content %}
+<main class="main error-page error-404-page">
+    <div class="page-content">
+        <div class="container">
+            <section class="error-shell text-center">
+                <p class="section-eyebrow">404 Error</p>
+                <h1>Page Not Found</h1>
+                <p>The page you are looking for may have been moved, removed, or the link may be incorrect.</p>
+                <div class="error-actions">
+                    <a href="{% url 'website:bullion_rates' %}" class="btn btn-outline-primary-2 btn-minwidth-sm">
+                        <span>View Live Rates</span>
+                        <i class="icon-long-arrow-right"></i>
+                    </a>
+                    <a href="{% url 'website:contact' %}" class="btn btn-outline-primary-2 btn-minwidth-sm">
+                        <span>Contact Desk</span>
+                        <i class="icon-long-arrow-right"></i>
+                    </a>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>
+{% endblock %}

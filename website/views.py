@@ -504,6 +504,9 @@ def bullion_rates(request):
         "market_summary": market_summary,
         "rate_source": rate_source,
         "rate_updated": rate_updated,
+        "rate_ticker_rows": our_rate_rows or rate_rows,
+        "rate_ticker_source": rate_source,
+        "rate_ticker_updated": rate_updated,
         "header": header,
     })
     response["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
@@ -530,6 +533,15 @@ def bullion_rates_data(request):
 
 def faq_page(request):
     return render(request, "website/faq.html")
+
+
+def privacy_policy(request):
+    header = PageHeader.objects.filter(page="privacy_policy", is_active=True).first()
+    return render(request, "website/privacy_policy.html", {"header": header})
+
+
+def custom_404(request, exception):
+    return render(request, "website/404.html", status=404)
 
 
 def category_detail(request, slug):

@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.urls import reverse
+from unittest.mock import patch
 
 from .models import ContactEnquiry, Product, ProductCategory, WebsiteSettings
 
@@ -32,6 +33,37 @@ class WebsiteSmokeTests(TestCase):
         self.assertContains(response, "SILVER PETI TUKDA")
         self.assertContains(response, "GOLD RTGS")
 
+    def test_non_live_page_does_not_fetch_market_rates(self):
+        with patch("website.views._fetch_market_bullion_rates") as fetch_rates:
+            response = self.client.get(reverse("website:home"))
+
+        self.assertEqual(response.status_code, 200)
+        fetch_rates.assert_not_called()
+
+    def test_live_rates_page_fetches_market_rates_once(self):
+        market = {
+            "gold_10gm": 1000,
+            "gold_10gm_bid": 990,
+            "gold_10gm_ask": 1010,
+            "silver_1kg": 2000,
+            "silver_1kg_bid": 1990,
+            "silver_1kg_ask": 2010,
+            "gold_10gm_high": 1100,
+            "gold_10gm_low": 900,
+            "silver_1kg_high": 2100,
+            "silver_1kg_low": 1900,
+            "usd_inr": 83.123,
+            "gold_usd": 2300,
+            "silver_usd": 30,
+            "source": "Test",
+            "updated": "Now",
+        }
+        with patch("website.views._fetch_market_bullion_rates", return_value=market) as fetch_rates:
+            response = self.client.get(reverse("website:bullion_rates"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(fetch_rates.call_count, 1)
+
     def test_footer_renders_admin_phone_numbers(self):
         site = WebsiteSettings.objects.get(id=1)
         site.footer_phone_1 = "1111111111"
@@ -46,6 +78,21 @@ class WebsiteSmokeTests(TestCase):
         for number in ["1111111111", "2222222222", "3333333333", "4444444444"]:
             self.assertContains(response, number)
             self.assertContains(response, f'tel:{number}')
+
+    def test_privacy_policy_page_loads(self):
+        response = self.client.get(reverse("website:privacy_policy"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Privacy Policy")
+        self.assertContains(response, "Shree Rudra Bullion")
+        self.assertContains(response, "Effective date:") 
+
+    def test_custom_404_page_loads(self):
+        response = self.client.get("/missing-page-for-test/")
+
+        self.assertEqual(response.status_code, 404)
+        self.assertContains(response, "Page Not Found", status_code=404)
+        self.assertContains(response, "View Live Rates", status_code=404)
 
     def test_category_detail_page_loads(self):
         category = ProductCategory.objects.create(

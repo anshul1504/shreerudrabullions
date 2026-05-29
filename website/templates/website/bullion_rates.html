@@ -279,6 +279,9 @@
     }
 
     function refreshRates() {
+        if (document.hidden) {
+            return;
+        }
         if (refreshButton) {
             refreshButton.disabled = true;
         }

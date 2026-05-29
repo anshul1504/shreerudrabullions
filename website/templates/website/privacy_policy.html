@@ -1,0 +1,117 @@
+{% extends 'website/base.html' %}
+{% load static %}
+
+{% block content %}
+<main class="main legal-page privacy-policy-page">
+    <div class="container">
+        <div class="page-header page-header-big text-center"
+             {% if header and header.background_image %}style="background-image: url('{{ header.background_image.url }}')"{% endif %}>
+            <h1 class="page-title text-white">
+                {{ header.title|default:"Privacy Policy" }}
+                <span class="text-white">{{ header.subtitle|default:"How Shree Rudra Bullion & Jewels handles website and enquiry information." }}</span>
+            </h1>
+        </div>
+    </div>
+
+    <div class="page-content">
+        <div class="container">
+            <article class="legal-content">
+                <section>
+                    <p class="section-eyebrow">Overview</p>
+                    <h2>Privacy Policy</h2>
+                    <p>Shree Rudra Bullion &amp; Jewels is committed to protecting your privacy and handling personal information responsibly. This Privacy Policy explains what information may be collected through our website, how that information may be used, and the choices available to you.</p>
+                    <p>By using this website, contacting us, or sharing your information with us, you agree to the practices described in this Privacy Policy.</p>
+                    <p><strong>Effective date:</strong> May 5, 2026</p>
+                </section>
+
+                <section>
+                    <h3>Information You Provide Directly</h3>
+                    <p>We may collect information you provide directly when you submit a contact form, call us, message us on WhatsApp, request live rates, or otherwise communicate with us. This may include:</p>
+                    <ul>
+                        <li>Name</li>
+                        <li>Phone number</li>
+                        <li>Email address</li>
+                        <li>Address or location details</li>
+                        <li>Inquiry details, product interest, bullion rate requirements, and message content</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Information Collected Automatically</h3>
+                    <p>When you visit our website, some technical information may be collected automatically to help operate, secure, and improve the site. This may include:</p>
+                    <ul>
+                        <li>IP address</li>
+                        <li>Browser type and device information</li>
+                        <li>Operating system</li>
+                        <li>Pages visited and links clicked</li>
+                        <li>Date, time, and duration of visits</li>
+                        <li>Standard server log information</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Information From Other Sources</h3>
+                    <p>We may receive limited information from publicly available sources, business partners, website analytics providers, bullion rate data providers, or communication platforms where you contact us, as permitted by applicable law.</p>
+                </section>
+
+                <section>
+                    <h3>How We Use Information</h3>
+                    <p>We may use collected information for business and service-related purposes, including to:</p>
+                    <ul>
+                        <li>Respond to inquiries and customer support requests</li>
+                        <li>Provide rate-related, product-related, jewellery-related, or service-related information</li>
+                        <li>Improve website content, performance, and user experience</li>
+                        <li>Maintain internal records and business operations</li>
+                        <li>Send important updates, where legally permitted</li>
+                        <li>Protect against misuse, fraud, unauthorized activity, or website security risks</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Sharing of Information</h3>
+                    <p>We do not sell your personal information. We may share information only when reasonably necessary, such as:</p>
+                    <ul>
+                        <li>With service providers who help us operate the website, manage hosting, process enquiries, or respond to customer requests</li>
+                        <li>To comply with legal obligations or valid government requests</li>
+                        <li>To protect our rights, customers, business operations, website security, or lawful interests</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Marketing and Communication Choices</h3>
+                    <p>If you receive promotional or service-related communications from us, you may request that we stop sending non-essential communications. You may also contact us directly to update or correct the information you have shared with us.</p>
+                </section>
+
+                <section>
+                    <h3>Data Security</h3>
+                    <p>We use reasonable administrative, technical, and physical safeguards to protect information from unauthorized access, misuse, loss, or disclosure. However, no internet-based system or method of electronic storage can be guaranteed to be completely secure.</p>
+                </section>
+
+                <section>
+                    <h3>Links to Other Websites</h3>
+                    <p>Our website may contain links to third-party websites or services, including WhatsApp, payment, map, social media, analytics, or rate-related services. We are not responsible for the privacy practices, security, or content of those third-party sites. You should review their respective privacy policies before providing any personal information.</p>
+                </section>
+
+                <section>
+                    <h3>Children's Privacy</h3>
+                    <p>Our website is not intended for children, and we do not knowingly collect personal information from children through this website.</p>
+                </section>
+
+                <section>
+                    <h3>Changes to This Policy</h3>
+                    <p>We may update this Privacy Policy from time to time to reflect changes in our practices, website functionality, or legal requirements. Updated versions will be posted on this page with the revised effective date.</p>
+                </section>
+
+                <section>
+                    <h3>Contact Us</h3>
+                    <p>For privacy-related questions or requests, please contact Shree Rudra Bullion &amp; Jewels through the contact details available on this website.</p>
+                    <a href="{% url 'website:contact' %}" class="btn btn-outline-primary-2 btn-minwidth-sm">
+                        <span>Contact Us</span>
+                        <i class="icon-long-arrow-right"></i>
+                    </a>
+                </section>
+            </article>
+        </div>
+    </div>
+</main>
+{% endblock %}

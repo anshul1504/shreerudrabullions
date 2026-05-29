@@ -1,7 +1,6 @@
 import re
 
 from django.conf import settings
-from django.core.cache import cache
 
 from .models import WebsiteSettings
 
@@ -40,19 +39,8 @@ def shop_menu(request):
 
 
 def rate_ticker(request):
-    cache_key = "website:rate_ticker_rows"
-    cached = cache.get(cache_key)
-    if cached is None:
-        try:
-            from .views import get_bullion_rate_rows
-            rows, source, updated = get_bullion_rate_rows(WebsiteSettings.objects.first())
-        except Exception:
-            rows, source, updated = [], "", ""
-        cached = (rows, source, updated)
-        cache.set(cache_key, cached, 300)
-    rows, source, updated = cached
     return {
-        "rate_ticker_rows": rows,
-        "rate_ticker_source": source,
-        "rate_ticker_updated": updated,
+        "rate_ticker_rows": [],
+        "rate_ticker_source": "",
+        "rate_ticker_updated": "",
     }
