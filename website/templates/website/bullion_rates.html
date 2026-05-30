@@ -134,18 +134,14 @@
                 <div class="f-item">
                     <span><i class="icon-arrow-up rate-card-icon" aria-hidden="true"></i>Gold Future Live Rate</span>
                     <strong data-live-base="gold_rtgs">
-                        {% for row in rate_rows %}
-                            {% if row.key == "gold_rtgs" %}{% if row.base %}Rs {{ row.base }}{% else %}-{% endif %}{% endif %}
-                        {% endfor %}
+                        {% if market_base_rates.gold_rtgs %}Rs {{ market_base_rates.gold_rtgs }}{% else %}-{% endif %}
                     </strong>
                     <small>Per 10 GM</small>
                 </div>
                 <div class="f-item">
                     <span><i class="icon-arrow-up rate-card-icon" aria-hidden="true"></i>Silver Future Live Rate</span>
                     <strong data-live-base="silver_rtgs">
-                        {% for row in rate_rows %}
-                            {% if row.key == "silver_rtgs" %}{% if row.base %}Rs {{ row.base }}{% else %}-{% endif %}{% endif %}
-                        {% endfor %}
+                        {% if market_base_rates.silver_rtgs %}Rs {{ market_base_rates.silver_rtgs }}{% else %}-{% endif %}
                     </strong>
                     <small>Per 1 KG</small>
                 </div>
@@ -184,11 +180,11 @@
                         <div class="rate-unit-text" data-rate-field="unit">{{ row.unit }}</div>
                     </div>
                     <div class="side-box dealer-box">
-                        <span class="side-label"><i class="icon-arrow-down" aria-hidden="true"></i> Buy</span>
+                        <span class="side-label">Buy</span>
                         <div class="side-value" data-rate-field="buy">{% if row.buy %}Rs {{ row.buy }}{% else %}-{% endif %}</div>
                     </div>
                     <div class="side-box dealer-box">
-                        <span class="side-label"><i class="icon-arrow-up" aria-hidden="true"></i> Sell</span>
+                        <span class="side-label">Sell</span>
                         <div class="side-value" data-rate-field="sell">{% if row.key == 'silver_kacchi_50_90' %}-{% elif row.sell %}Rs {{ row.sell }}{% else %}-{% endif %}</div>
                     </div>
                 </div>
@@ -228,11 +224,15 @@
     }
 
     function updateRows(selector, rows) {
+        document.querySelectorAll(selector + "]").forEach(function (el) {
+            el.hidden = true;
+        });
         rows.forEach(function (row) {
             var el = document.querySelector(selector + '="' + row.key + '"]');
             if (!el) {
                 return;
             }
+            el.hidden = false;
             ["label", "metal", "formula", "unit", "high", "low", "buy", "sell"].forEach(function (field) {
                 var target = el.querySelector('[data-rate-field="' + field + '"]');
                 if (target) {
@@ -304,10 +304,10 @@
                 updateRows("[data-rate-row", data.rate_rows || []);
                 updateRows("[data-our-rate-row", data.our_rate_rows || []);
                 updateMarketSummary(data.market_summary);
-                (data.rate_rows || []).forEach(function (row) {
-                    var base = document.querySelector('[data-live-base="' + row.key + '"]');
+                Object.keys(data.market_base_rates || {}).forEach(function (key) {
+                    var base = document.querySelector('[data-live-base="' + key + '"]');
                     if (base) {
-                        base.textContent = valueText(row, "base");
+                        base.textContent = data.market_base_rates[key] ? "Rs " + data.market_base_rates[key] : "-";
                     }
                 });
             })

@@ -266,6 +266,7 @@ def _fetch_market_bullion_rates():
     silver_usd = None
     source = ""
     updated = ""
+    market_open = False
 
     cloud_url = getattr(settings, "BULLION_GOLDRATES_CLOUD_API_URL", "").strip()
     cloud_key = getattr(settings, "BULLION_GOLDRATES_CLOUD_API_KEY", "").strip()
@@ -291,6 +292,10 @@ def _fetch_market_bullion_rates():
             gold_sell = _to_float(gold_row.get("ask"))
             silver_buy = _to_float(silver_row.get("bid"))
             silver_sell = _to_float(silver_row.get("ask"))
+            market_open = any(
+                value is not None
+                for value in (gold_buy, gold_sell, silver_buy, silver_sell)
+            )
             usd_inr = _rate_midpoint(usd_row)
             gold_usd = _rate_midpoint(gold_usd_row)
             silver_usd = _rate_midpoint(silver_usd_row)
@@ -320,6 +325,7 @@ def _fetch_market_bullion_rates():
                 if gold_10gm:
                     source = "GoldAPI"
                     updated = _format_api_timestamp(payload.get("timestamp"))
+                    market_open = True
             if silver_1kg is None:
                 req = Request("https://www.goldapi.io/api/XAG/INR", headers=headers)
                 payload = json.loads(urlopen(req, timeout=8).read().decode("utf-8"))
@@ -328,6 +334,7 @@ def _fetch_market_bullion_rates():
                 if silver_1kg:
                     source = "GoldAPI"
                     updated = updated or _format_api_timestamp(payload.get("timestamp"))
+                    market_open = True
         except (HTTPError, URLError, TimeoutError, ValueError, json.JSONDecodeError):
             pass
 
@@ -356,6 +363,7 @@ def _fetch_market_bullion_rates():
             if gold_10gm or silver_1kg:
                 source = source or "MetalpriceAPI"
                 updated = updated or _format_api_timestamp(payload.get("timestamp"))
+                market_open = True
         except (HTTPError, URLError, TimeoutError, ValueError, json.JSONDecodeError, ZeroDivisionError):
             pass
 
@@ -375,6 +383,7 @@ def _fetch_market_bullion_rates():
         "silver_usd": silver_usd,
         "source": source or "Unavailable",
         "updated": updated,
+        "market_open": market_open,
     }
 
 
@@ -419,7 +428,22 @@ def get_bullion_rate_rows(site=None, market=None):
         ("silver_kacchi_50_90", "SILVER KACCHI (50-90T)", "Silver", "1 KG", "silver_1kg"),
     ]
     rows = []
+    market_open = market.get("market_open")
+    if market_open is None:
+        market_open = any(
+            market.get(key) is not None
+            for key in (
+                "gold_10gm_bid",
+                "gold_10gm_ask",
+                "silver_1kg_bid",
+                "silver_1kg_ask",
+                "gold_10gm",
+                "silver_1kg",
+            )
+        )
     for key, label, metal, unit, base_key in rules:
+        if site and not getattr(site, f"{key}_is_active", True):
+            continue
         base_rate = market.get(base_key)
         buy = market.get(f"{base_key}_bid")
         sell = market.get(f"{base_key}_ask")
@@ -427,7 +451,7 @@ def get_bullion_rate_rows(site=None, market=None):
             buy = base_rate
         if sell is None:
             sell = base_rate
-        if site:
+        if site and market_open:
             buy = _apply_live_row_adjustment(
                 buy,
                 getattr(site, f"{key}_buy_operator", "+"),
@@ -438,6 +462,9 @@ def get_bullion_rate_rows(site=None, market=None):
                 getattr(site, f"{key}_sell_operator", "+"),
                 getattr(site, f"{key}_sell_value", 0),
             )
+        if not market_open:
+            buy = None
+            sell = None
         rows.append({
             "key": key,
             "label": label,
@@ -459,6 +486,14 @@ def get_market_summary(market=None):
         "usd_inr": _format_decimal_rate(market.get("usd_inr"), 3),
         "gold_usd": _format_decimal_rate(market.get("gold_usd"), 2),
         "silver_usd": _format_decimal_rate(market.get("silver_usd"), 2),
+    }
+
+
+def get_market_base_rates(market=None):
+    market = market or _fetch_market_bullion_rates()
+    return {
+        "gold_rtgs": _format_indian_rate(market.get("gold_10gm")),
+        "silver_rtgs": _format_indian_rate(market.get("silver_1kg")),
     }
 
 
@@ -498,10 +533,12 @@ def bullion_rates(request):
     rate_rows, rate_source, rate_updated = get_bullion_rate_rows(site, market)
     our_rate_rows = get_our_rate_rows(rate_rows, our_settings)
     market_summary = get_market_summary(market)
+    market_base_rates = get_market_base_rates(market)
     response = render(request, "website/bullion_rates.html", {
         "rate_rows": rate_rows,
         "our_rate_rows": our_rate_rows,
         "market_summary": market_summary,
+        "market_base_rates": market_base_rates,
         "rate_source": rate_source,
         "rate_updated": rate_updated,
         "rate_ticker_rows": our_rate_rows or rate_rows,
@@ -520,12 +557,15 @@ def bullion_rates_data(request):
     rate_rows, rate_source, rate_updated = get_bullion_rate_rows(site, market)
     our_rate_rows = get_our_rate_rows(rate_rows, our_settings)
     market_summary = get_market_summary(market)
+    market_base_rates = get_market_base_rates(market)
     response = JsonResponse({
         "rate_rows": rate_rows,
         "our_rate_rows": our_rate_rows,
         "market_summary": market_summary,
+        "market_base_rates": market_base_rates,
         "rate_source": rate_source,
         "rate_updated": rate_updated,
+        "market_open": market.get("market_open", False),
     })
     response["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
     return response

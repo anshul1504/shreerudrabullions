@@ -206,6 +206,14 @@ class WebsiteSettings(models.Model):
     silver_kacchi_50_90_buy_value = models.FloatField(default=0.0)
     silver_kacchi_50_90_sell_operator = models.CharField(max_length=1, choices=RATE_ADJUSTMENT_CHOICES, default="+")
     silver_kacchi_50_90_sell_value = models.FloatField(default=0.0)
+    gold_rtgs_is_active = models.BooleanField(default=True)
+    silver_rtgs_is_active = models.BooleanField(default=True)
+    silver_peti_rtgs_is_active = models.BooleanField(default=True)
+    gold_999_is_active = models.BooleanField(default=True)
+    gold_9950_is_active = models.BooleanField(default=True)
+    silver_peti_tukda_is_active = models.BooleanField(default=True)
+    silver_chorsa_99_is_active = models.BooleanField(default=True)
+    silver_kacchi_50_90_is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return "Website Settings"

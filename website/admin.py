@@ -65,6 +65,19 @@ class LiveRateSettingsAdmin(admin.ModelAdmin):
 
     form = LiveRateSettingsForm
     fieldsets = (
+        ("Visible Rows", {
+            "description": "Turn rows on/off for the live rates table.",
+            "fields": (
+                "gold_rtgs_is_active",
+                "gold_999_is_active",
+                "gold_9950_is_active",
+                "silver_rtgs_is_active",
+                "silver_peti_rtgs_is_active",
+                "silver_peti_tukda_is_active",
+                "silver_chorsa_99_is_active",
+                "silver_kacchi_50_90_is_active",
+            ),
+        }),
         ("Gold Rows", {
             "description": "These values are applied directly to fetched live Buy/Sell rates. Select Addition (+) or Subtraction (-), then enter the value.",
             "fields": (
@@ -92,7 +105,7 @@ class LiveRateSettingsAdmin(admin.ModelAdmin):
             ),
         }),
     )
-    list_display = ("__str__", "gold_rtgs_preview", "silver_rtgs_preview")
+    list_display = ("__str__", "gold_rtgs_preview", "silver_rtgs_preview", "active_rows_preview")
 
     @admin.display(description="Gold RTGS")
     def gold_rtgs_preview(self, obj):
@@ -101,6 +114,11 @@ class LiveRateSettingsAdmin(admin.ModelAdmin):
     @admin.display(description="Silver RTGS")
     def silver_rtgs_preview(self, obj):
         return f"Buy {obj.silver_rtgs_buy_operator}{obj.silver_rtgs_buy_value:g} / Sell {obj.silver_rtgs_sell_operator}{obj.silver_rtgs_sell_value:g}"
+
+    @admin.display(description="Active rows")
+    def active_rows_preview(self, obj):
+        keys = self.LiveRateSettingsForm.PRODUCT_LABELS
+        return sum(1 for key in keys if getattr(obj, f"{key}_is_active", True))
 
     def has_add_permission(self, request):
         return not WebsiteSettings.objects.exists()

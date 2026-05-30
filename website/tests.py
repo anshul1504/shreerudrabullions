@@ -64,6 +64,77 @@ class WebsiteSmokeTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(fetch_rates.call_count, 1)
 
+    def test_live_rates_hides_inactive_admin_rows(self):
+        site = WebsiteSettings.objects.get(id=1)
+        site.gold_rtgs_is_active = False
+        site.save()
+
+        response = self.client.get(reverse("website:bullion_rates"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, "GOLD RTGS")
+        self.assertContains(response, "SILVER PETI TUKDA")
+
+    def test_inactive_rows_do_not_hide_featured_market_rates(self):
+        site = WebsiteSettings.objects.get(id=1)
+        site.gold_rtgs_is_active = False
+        site.silver_rtgs_is_active = False
+        site.save()
+        market = {
+            "gold_10gm": 155932,
+            "gold_10gm_bid": 155851,
+            "gold_10gm_ask": 156013,
+            "silver_1kg": 267064,
+            "silver_1kg_bid": 267000,
+            "silver_1kg_ask": 267127,
+            "gold_10gm_high": 156013,
+            "gold_10gm_low": 156012,
+            "silver_1kg_high": 269400,
+            "silver_1kg_low": 263900,
+            "usd_inr": 94.64,
+            "gold_usd": 4538.52,
+            "silver_usd": 75.32,
+            "source": "Test",
+            "updated": "Now",
+            "market_open": True,
+        }
+
+        with patch("website.views._fetch_market_bullion_rates", return_value=market):
+            response = self.client.get(reverse("website:bullion_rates"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, "SILVER RTGS</div>")
+        self.assertContains(response, "Rs 1,55,932")
+        self.assertContains(response, "Rs 2,67,064")
+
+    def test_live_rates_market_closed_shows_dash_for_buy_sell(self):
+        market = {
+            "gold_10gm": 1000,
+            "gold_10gm_bid": None,
+            "gold_10gm_ask": None,
+            "silver_1kg": 2000,
+            "silver_1kg_bid": None,
+            "silver_1kg_ask": None,
+            "gold_10gm_high": 1100,
+            "gold_10gm_low": 900,
+            "silver_1kg_high": 2100,
+            "silver_1kg_low": 1900,
+            "usd_inr": 83.123,
+            "gold_usd": 2300,
+            "silver_usd": 30,
+            "source": "Test",
+            "updated": "Closed",
+            "market_open": False,
+        }
+        with patch("website.views._fetch_market_bullion_rates", return_value=market):
+            response = self.client.get(reverse("website:bullion_rates_data"))
+
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertFalse(payload["market_open"])
+        self.assertEqual(payload["our_rate_rows"][0]["buy"], "")
+        self.assertEqual(payload["our_rate_rows"][0]["sell"], "")
+
     def test_footer_renders_admin_phone_numbers(self):
         site = WebsiteSettings.objects.get(id=1)
         site.footer_phone_1 = "1111111111"
