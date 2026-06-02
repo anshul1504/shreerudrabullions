@@ -268,8 +268,17 @@ def _fetch_market_bullion_rates():
     updated = ""
     market_open = False
 
-    cloud_url = getattr(settings, "BULLION_GOLDRATES_CLOUD_API_URL", "").strip()
-    cloud_key = getattr(settings, "BULLION_GOLDRATES_CLOUD_API_KEY", "").strip()
+    site_settings = WebsiteSettings.objects.first()
+    cloud_url = (
+        getattr(site_settings, "goldrates_cloud_api_url", "").strip()
+        if site_settings
+        else ""
+    ) or getattr(settings, "BULLION_GOLDRATES_CLOUD_API_URL", "").strip()
+    cloud_key = (
+        getattr(site_settings, "goldrates_cloud_api_key", "").strip()
+        if site_settings
+        else ""
+    ) or getattr(settings, "BULLION_GOLDRATES_CLOUD_API_KEY", "").strip()
     if cloud_url and cloud_key:
         try:
             params = urlencode({"api_key": cloud_key})

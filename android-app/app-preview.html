@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shree Rudra Bullion App Preview</title>
+  <style>
+    :root {
+      --gold: #b27a13;
+      --dark: #111318;
+      --surface: #fffcf5;
+      --line: #e8d8b5;
+      --green: #006a3a;
+      --red: #9e1111;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: #ece7dc;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--dark);
+    }
+    .phone {
+      width: min(420px, 100vw);
+      height: min(860px, 100vh);
+      background: var(--surface);
+      border: 10px solid #202227;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 24px 70px rgba(0,0,0,.24);
+      display: flex;
+      flex-direction: column;
+    }
+    .screen {
+      flex: 1;
+      overflow: auto;
+      padding: 24px 18px 92px;
+    }
+    .brand h1, .brand h2, .brand p { margin: 0; }
+    .brand h1 { font-size: 28px; line-height: 1; font-weight: 900; }
+    .brand h2 { font-size: 20px; margin-top: 4px; }
+    .brand p { color: var(--gold); font-size: 13px; font-weight: 800; margin-top: 5px; }
+    .eyebrow { margin-top: 22px; color: var(--gold); font-weight: 800; font-size: 12px; }
+    h3 { margin: 3px 0 16px; font-size: 28px; line-height: 1.1; }
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 18px;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 0 rgba(0,0,0,.04);
+    }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .muted { color: #666; font-size: 13px; }
+    .price { color: var(--gold); font-weight: 900; font-size: 23px; margin-top: 3px; }
+    .unit { color: #777; font-size: 11px; font-weight: 800; }
+    .rate-title { font-size: 18px; font-weight: 900; }
+    .rate-boxes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+    .rate-box {
+      border-radius: 8px;
+      padding: 14px 8px;
+      text-align: center;
+      font-weight: 900;
+    }
+    .buy { color: var(--green); background: rgba(0,106,58,.07); }
+    .sell { color: var(--red); background: rgba(158,17,17,.07); }
+    .rate-box span { display: block; font-size: 11px; margin-bottom: 5px; }
+    .product-img {
+      width: 100%;
+      aspect-ratio: 1.35;
+      border-radius: 8px;
+      background:
+        radial-gradient(circle at 35% 30%, #ffe7a0, transparent 34%),
+        linear-gradient(135deg, #7c4f0b, #d8ad4f 58%, #fff0b8);
+      margin-bottom: 12px;
+    }
+    .field {
+      width: 100%;
+      border: 1px solid #cfc7b8;
+      border-radius: 6px;
+      padding: 14px 12px;
+      margin: 0 0 12px;
+      background: white;
+      color: #555;
+    }
+    .primary {
+      width: 100%;
+      height: 52px;
+      border: 0;
+      border-radius: 24px;
+      background: var(--gold);
+      color: white;
+      font-weight: 900;
+      font-size: 15px;
+    }
+    .link-btn {
+      border: 0;
+      background: transparent;
+      color: var(--gold);
+      font-weight: 800;
+      padding: 14px 0 0;
+    }
+    .bottom {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+      background: var(--dark);
+      padding: 8px;
+    }
+    .bottom button {
+      border: 0;
+      background: transparent;
+      color: white;
+      font-weight: 800;
+      padding: 12px 2px;
+    }
+    .bottom button.active { color: var(--gold); }
+    .view { display: none; }
+    .view.active { display: block; }
+    .auth-toggle { display: none; }
+  </style>
+</head>
+<body>
+  <main class="phone">
+    <section class="screen">
+      <div class="brand">
+        <h1>SHREE RUDRA</h1>
+        <h2>BULLION & JEWELS</h2>
+        <p>JHABUA MP</p>
+      </div>
+
+      <div id="rates" class="view active">
+        <div class="eyebrow">LIVE MARKET DESK</div>
+        <h3>Bullion Rates</h3>
+        <div class="grid">
+          <div class="card">
+            <div class="muted">Gold Future</div>
+            <div class="price">Rs 98,450</div>
+            <div class="unit">PER 10 GM</div>
+          </div>
+          <div class="card">
+            <div class="muted">Silver Future</div>
+            <div class="price">Rs 1,08,200</div>
+            <div class="unit">PER 1 KG</div>
+          </div>
+        </div>
+        <p class="muted">Updated: 30 May 2026, 11:10 AM</p>
+        <div class="card">
+          <div class="rate-title">Gold RTGS</div>
+          <div class="muted">PER 10 GM</div>
+          <div class="rate-boxes">
+            <div class="rate-box buy"><span>BUY</span>Rs 98,100</div>
+            <div class="rate-box sell"><span>SELL</span>Rs 98,650</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="rate-title">Silver RTGS</div>
+          <div class="muted">PER 1 KG</div>
+          <div class="rate-boxes">
+            <div class="rate-box buy"><span>BUY</span>Rs 1,07,700</div>
+            <div class="rate-box sell"><span>SELL</span>Rs 1,08,500</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="products" class="view">
+        <div class="eyebrow">PRODUCTS</div>
+        <h3>Bullion & Jewellery</h3>
+        <div class="card">
+          <div class="product-img"></div>
+          <div class="rate-title">Gold Bar 24K</div>
+          <div class="muted">Gold  999</div>
+          <div class="price">Rs 98,450.00</div>
+        </div>
+        <div class="card">
+          <div class="product-img"></div>
+          <div class="rate-title">Silver Coin</div>
+          <div class="muted">Silver  999</div>
+          <div class="price">Rs 10,820.00</div>
+        </div>
+      </div>
+
+      <div id="contact" class="view">
+        <div class="eyebrow">CONTACT</div>
+        <h3>Bullion Desk</h3>
+        <div class="card">
+          <strong>Phone</strong>
+          <p>+91 90394 91009</p>
+          <strong>Email</strong>
+          <p>info@shreerudrabullion.com</p>
+          <strong>Address</strong>
+          <p>Jhabua, Madhya Pradesh</p>
+        </div>
+      </div>
+
+      <div id="profile" class="view">
+        <div class="eyebrow">PROFILE</div>
+        <h3>Demo Account</h3>
+        <div class="card">
+          <strong>Mobile</strong>
+          <p>9993098691</p>
+          <button class="primary">Logout</button>
+        </div>
+      </div>
+
+      <div id="login" class="view">
+        <h3 style="margin-top:28px">Login</h3>
+        <div class="card">
+          <div class="field">Mobile number</div>
+          <div class="field">Password</div>
+          <button class="primary">Login</button>
+          <button class="link-btn" onclick="show('signup')">Create access request</button>
+        </div>
+      </div>
+
+      <div id="signup" class="view">
+        <h3 style="margin-top:28px">Signup Request</h3>
+        <div class="card">
+          <div class="field">Full name</div>
+          <div class="field">Mobile number</div>
+          <div class="field">Password</div>
+          <div class="field">City</div>
+          <button class="primary">Send Request</button>
+          <button class="link-btn" onclick="show('login')">Back to login</button>
+        </div>
+      </div>
+    </section>
+    <nav class="bottom">
+      <button class="active" onclick="show('rates', this)">Rates</button>
+      <button onclick="show('products', this)">Products</button>
+      <button onclick="show('contact', this)">Contact</button>
+      <button onclick="show('profile', this)">Profile</button>
+    </nav>
+  </main>
+  <script>
+    function show(id, button) {
+      document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      if (button) {
+        document.querySelectorAll('.bottom button').forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+      }
+    }
+  </script>
+</body>
+</html>

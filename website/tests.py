@@ -1,9 +1,11 @@
 from django.test import TestCase
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
 from django.urls import reverse
 from unittest.mock import patch
 
-from .models import ContactEnquiry, Product, ProductCategory, WebsiteSettings
+from .models import AppSignupRequest, ContactEnquiry, Product, ProductCategory, WebsiteSettings
 
 
 class WebsiteSmokeTests(TestCase):
@@ -213,6 +215,116 @@ class WebsiteSmokeTests(TestCase):
         )
         self.assertEqual(response.status_code, 302)
         self.assertEqual(ContactEnquiry.objects.count(), 1)
+
+    def test_app_signup_request_can_be_submitted(self):
+        response = self.client.post(
+            "/api/v1/auth/signup-request/",
+            data={
+                "name": "Mobile User",
+                "mobile": "9876543210",
+                "email": "mobile@example.com",
+                "password": "StrongPass123!",
+                "confirm_password": "StrongPass123!",
+                "fcm_token": "test-fcm-token",
+            },
+            content_type="application/json",
+        )
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(AppSignupRequest.objects.count(), 1)
+        signup = AppSignupRequest.objects.get()
+        self.assertEqual(signup.status, AppSignupRequest.STATUS_PENDING)
+        self.assertEqual(signup.email, "mobile@example.com")
+        self.assertEqual(signup.fcm_token, "test-fcm-token")
+        self.assertNotEqual(signup.password_hash, "StrongPass123!")
+
+    def test_app_signup_status_returns_pending_and_approved_messages(self):
+        signup = AppSignupRequest.objects.create(
+            name="Mobile User",
+            mobile="9876543210",
+            password_hash=make_password("secret123"),
+        )
+
+        pending_response = self.client.get("/api/v1/auth/signup-status/?mobile=9876543210")
+        self.assertEqual(pending_response.status_code, 200)
+        self.assertEqual(pending_response.json()["status"], AppSignupRequest.STATUS_PENDING)
+
+        signup.status = AppSignupRequest.STATUS_APPROVED
+        signup.save(update_fields=["status"])
+        approved_response = self.client.get("/api/v1/auth/signup-status/?mobile=9876543210")
+        self.assertEqual(approved_response.status_code, 200)
+        self.assertEqual(approved_response.json()["status"], AppSignupRequest.STATUS_APPROVED)
+
+    def test_app_login_requires_approved_user(self):
+        AppSignupRequest.objects.create(
+            name="Pending User",
+            mobile="9876543211",
+            password_hash=make_password("secret123"),
+        )
+
+        response = self.client.post(
+            "/api/v1/auth/login/",
+            data={"mobile": "9876543211", "password": "secret123"},
+            content_type="application/json",
+        )
+
+        self.assertEqual(response.status_code, 401)
+
+    def test_approved_app_user_can_login_and_access_profile(self):
+        User.objects.create_user(
+            username="9876543212",
+            password="secret123",
+            first_name="Approved User",
+        )
+
+        login_response = self.client.post(
+            "/api/v1/auth/login/",
+            data={"mobile": "9876543212", "password": "secret123"},
+            content_type="application/json",
+        )
+
+        self.assertEqual(login_response.status_code, 200)
+        token = login_response.json()["access"]
+        profile_response = self.client.get(
+            "/api/v1/profile/",
+            HTTP_AUTHORIZATION=f"Bearer {token}",
+        )
+        self.assertEqual(profile_response.status_code, 200)
+        self.assertEqual(profile_response.json()["mobile"], "9876543212")
+
+    def test_forgot_password_resets_approved_user_password(self):
+        user = User.objects.create_user(
+            username="9876543213",
+            password="OldPass123!",
+            first_name="Approved User",
+            email="approved@example.com",
+        )
+        AppSignupRequest.objects.create(
+            name="Approved User",
+            mobile="9876543213",
+            email="approved@example.com",
+            password_hash=user.password,
+            status=AppSignupRequest.STATUS_APPROVED,
+        )
+
+        response = self.client.post(
+            "/api/v1/auth/forgot-password/",
+            data={
+                "mobile": "9876543213",
+                "email": "approved@example.com",
+                "password": "NewStrongPass123!",
+                "confirm_password": "NewStrongPass123!",
+            },
+            content_type="application/json",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        login_response = self.client.post(
+            "/api/v1/auth/login/",
+            data={"mobile": "9876543213", "password": "NewStrongPass123!"},
+            content_type="application/json",
+        )
+        self.assertEqual(login_response.status_code, 200)
 
 
 class FrontendSeleniumTests(StaticLiveServerTestCase):

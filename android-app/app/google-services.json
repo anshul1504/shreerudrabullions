@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1036047014727",
+    "project_id": "shree-rudra-bullion",
+    "storage_bucket": "shree-rudra-bullion.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1036047014727:android:df5b8a25ac622b92fbca62",
+        "android_client_info": {
+          "package_name": "com.shreerudra.bullion"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAORTZ-gpVG1E88j6ZC1m87f2X1otVaIXg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

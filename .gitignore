@@ -22,3 +22,16 @@ htmlcov/
 
 .DS_Store
 Thumbs.db
+
+# Android / Gradle
+android-app/.gradle/
+android-app/.kotlin/
+android-app/build/
+android-app/app/build/
+android-app/local.properties
+*.apk
+*.aab
+
+# Local server logs
+server.err.log
+server.out.log

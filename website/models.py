@@ -87,6 +87,19 @@ class WebsiteSettings(models.Model):
         default="api",
         help_text="Choose whether live rates come from API or manual admin values.",
     )
+    goldrates_cloud_api_url = models.URLField(
+        "GoldRates Cloud API URL",
+        blank=True,
+        default="",
+        help_text="GoldRates Cloud live-rate endpoint. Leave blank to use the server default.",
+    )
+    goldrates_cloud_api_key = models.CharField(
+        "GoldRates Cloud API key",
+        max_length=100,
+        blank=True,
+        default="",
+        help_text="Update this key from admin when GoldRates Cloud provides a new API key.",
+    )
     gold_buy_formula_operator = models.CharField(
         "Gold buy formula",
         max_length=1,
@@ -365,6 +378,67 @@ class ContactEnquiry(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.email}"
+
+
+class AppSignupRequest(models.Model):
+    STATUS_PENDING = "pending"
+    STATUS_APPROVED = "approved"
+    STATUS_REJECTED = "rejected"
+    STATUS_CHOICES = (
+        (STATUS_PENDING, "Pending"),
+        (STATUS_APPROVED, "Approved"),
+        (STATUS_REJECTED, "Rejected"),
+    )
+
+    name = models.CharField(max_length=100)
+    mobile = models.CharField(max_length=20, unique=True)
+    email = models.EmailField(blank=True)
+    profile_image = models.ImageField(upload_to="app_profiles/", blank=True, null=True)
+    fcm_token = models.TextField(blank=True)
+    password_hash = models.CharField(max_length=128)
+    city = models.CharField(max_length=100, blank=True)
+    message = models.TextField(blank=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_PENDING)
+    admin_note = models.TextField(blank=True)
+    reviewed_at = models.DateTimeField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "App Signup Request"
+        verbose_name_plural = "App Signup Requests"
+
+    def __str__(self):
+        return f"{self.name} - {self.mobile}"
+
+
+class AppProfileUpdateRequest(models.Model):
+    STATUS_PENDING = "pending"
+    STATUS_APPROVED = "approved"
+    STATUS_REJECTED = "rejected"
+    STATUS_CHOICES = (
+        (STATUS_PENDING, "Pending"),
+        (STATUS_APPROVED, "Approved"),
+        (STATUS_REJECTED, "Rejected"),
+    )
+
+    user = models.ForeignKey("auth.User", on_delete=models.CASCADE, related_name="app_profile_update_requests")
+    name = models.CharField(max_length=100)
+    mobile = models.CharField(max_length=20)
+    city = models.CharField(max_length=100, blank=True)
+    message = models.TextField(blank=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_PENDING)
+    admin_note = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    reviewed_at = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "App Profile Update Request"
+        verbose_name_plural = "App Profile Update Requests"
+
+    def __str__(self):
+        return f"{self.user.username} - {self.status}"
 
 
 class StoreLocation(models.Model):

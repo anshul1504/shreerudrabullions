@@ -17,6 +17,15 @@ from django.core.exceptions import ImproperlyConfigured
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+env_file = BASE_DIR / ".env"
+if env_file.exists():
+    for line in env_file.read_text().splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        os.environ[key.strip()] = value.strip().strip('"').strip("'")
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
@@ -33,7 +42,7 @@ if not SECRET_KEY:
 
 ALLOWED_HOSTS = [
     host.strip()
-    for host in os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+    for host in os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1,192.168.1.18").split(",")
     if host.strip()
 ]
 
@@ -54,6 +63,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'website',
 ]
 
@@ -135,6 +145,15 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticated",
+    ),
+}
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
@@ -176,7 +195,7 @@ JAZZMIN_SETTINGS = {
 
 # Live bullion API
 BULLION_GOLDRATES_CLOUD_API_URL = os.getenv("BULLION_GOLDRATES_CLOUD_API_URL", "https://goldrates.cloud/apis/live/gold.php")
-BULLION_GOLDRATES_CLOUD_API_KEY = os.getenv("BULLION_GOLDRATES_CLOUD_API_KEY", "9993098691-demo")
+BULLION_GOLDRATES_CLOUD_API_KEY = os.getenv("BULLION_GOLDRATES_CLOUD_API_KEY", "9977926475-LS-v2")
 BULLION_RATES_API_URL = os.getenv("BULLION_RATES_API_URL", "https://api.metalpriceapi.com/v1/latest")
 BULLION_RATES_API_KEY = os.getenv("BULLION_RATES_API_KEY", "")
 BULLION_RATES_CURRENCY = "INR"

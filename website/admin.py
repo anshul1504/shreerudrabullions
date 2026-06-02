@@ -1,5 +1,7 @@
 from django import forms
 from django.contrib import admin
+from django.contrib.auth.models import User
+from django.utils import timezone
 from .models import (
     WebsiteSettings,
     LiveRateSettings,
@@ -8,9 +10,12 @@ from .models import (
     AboutPage,
     Brand,    Testimonial,
     ContactEnquiry,
+    AppSignupRequest,
+    AppProfileUpdateRequest,
     StoreLocation,
     HomeSlider,
 )
+from .push_notifications import send_account_approved_notification
 
 # ============================================================
 # WEBSITE SETTINGS (SINGLE INSTANCE)
@@ -27,6 +32,7 @@ class WebsiteSettingsAdmin(admin.ModelAdmin):
             "email",
             "address",
         )}),
+        ("Live Rates API", {"fields": ("goldrates_cloud_api_url", "goldrates_cloud_api_key")}),
         ("Timing & Meta", {"fields": ("weekday_label", "weekday_time", "sunday_label", "sunday_time", "footer_text", "facebook", "instagram", "twitter", "youtube", "meta_keywords", "meta_description", "whatsapp_qr")}),
     )
     def has_add_permission(self, request):
@@ -65,6 +71,13 @@ class LiveRateSettingsAdmin(admin.ModelAdmin):
 
     form = LiveRateSettingsForm
     fieldsets = (
+        ("GoldRates Cloud API", {
+            "description": "Change the live-rate API endpoint or key here. These admin values override .env/settings.py when filled.",
+            "fields": (
+                "goldrates_cloud_api_url",
+                "goldrates_cloud_api_key",
+            ),
+        }),
         ("Visible Rows", {
             "description": "Turn rows on/off for the live rates table.",
             "fields": (
@@ -230,6 +243,134 @@ class ContactEnquiryAdmin(admin.ModelAdmin):
     list_display = ("name", "email", "phone", "enquiry_type", "subject", "created_at")
     search_fields = ("name", "email", "phone")
     list_filter = ("created_at",)
+
+
+@admin.register(AppSignupRequest)
+class AppSignupRequestAdmin(admin.ModelAdmin):
+    list_display = ("name", "mobile", "status", "created_at", "reviewed_at")
+    list_filter = ("status", "created_at", "reviewed_at")
+    search_fields = ("name", "mobile", "email")
+    readonly_fields = ("password_hash", "fcm_token", "created_at", "reviewed_at")
+    actions = ("approve_requests", "reject_requests")
+    fieldsets = (
+        ("Customer", {"fields": ("name", "mobile", "profile_image", "message")}),
+        ("Review", {"fields": ("status", "admin_note", "reviewed_at")}),
+        ("Push Notification", {"fields": ("fcm_token",)}),
+        ("System", {"fields": ("password_hash", "created_at")}),
+    )
+
+    @admin.action(description="Approve selected signup requests")
+    def approve_requests(self, request, queryset):
+        approved = 0
+        for signup in queryset:
+            if self._approve_signup(signup):
+                approved += 1
+        self.message_user(request, f"{approved} signup request(s) approved.")
+
+    def save_model(self, request, obj, form, change):
+        was_approved = False
+        if change and obj.pk:
+            was_approved = AppSignupRequest.objects.filter(
+                pk=obj.pk,
+                status=AppSignupRequest.STATUS_APPROVED,
+            ).exists()
+
+        if obj.status == AppSignupRequest.STATUS_APPROVED and not was_approved:
+            self._approve_signup(obj)
+            return
+        super().save_model(request, obj, form, change)
+
+    def _approve_signup(self, signup):
+        if signup.status == AppSignupRequest.STATUS_APPROVED and signup.reviewed_at:
+            return False
+
+        user, created = User.objects.get_or_create(
+            username=signup.mobile,
+            defaults={
+                "first_name": signup.name,
+                "email": signup.email,
+                "password": signup.password_hash,
+                "is_active": True,
+            },
+        )
+        if not created:
+            user.first_name = signup.name
+            user.email = signup.email
+            user.password = signup.password_hash
+            user.is_active = True
+            user.save(update_fields=["first_name", "email", "password", "is_active"])
+        signup.status = AppSignupRequest.STATUS_APPROVED
+        signup.reviewed_at = signup.reviewed_at or timezone.now()
+        signup.save()
+        send_account_approved_notification(signup.fcm_token)
+        return True
+
+    @admin.action(description="Reject selected signup requests")
+    def reject_requests(self, request, queryset):
+        updated = queryset.update(
+            status=AppSignupRequest.STATUS_REJECTED,
+            reviewed_at=timezone.now(),
+        )
+        self.message_user(request, f"{updated} signup request(s) rejected.")
+
+
+@admin.register(AppProfileUpdateRequest)
+class AppProfileUpdateRequestAdmin(admin.ModelAdmin):
+    list_display = ("user", "name", "mobile", "city", "status", "created_at", "reviewed_at")
+    list_filter = ("status", "created_at", "reviewed_at")
+    search_fields = ("user__username", "name", "mobile", "city")
+    actions = ("approve_requests", "reject_requests")
+    fieldsets = (
+        ("Requested Details", {"fields": ("user", "name", "mobile", "city", "message")}),
+        ("Review", {"fields": ("status", "admin_note", "reviewed_at")}),
+    )
+
+    @admin.action(description="Approve selected profile update requests")
+    def approve_requests(self, request, queryset):
+        count = 0
+        for update in queryset:
+            if self._approve_update(update):
+                count += 1
+        self.message_user(request, f"{count} profile update request(s) approved.")
+
+    def save_model(self, request, obj, form, change):
+        was_approved = False
+        if change and obj.pk:
+            was_approved = AppProfileUpdateRequest.objects.filter(
+                pk=obj.pk,
+                status=AppProfileUpdateRequest.STATUS_APPROVED,
+            ).exists()
+        if obj.status == AppProfileUpdateRequest.STATUS_APPROVED and not was_approved:
+            self._approve_update(obj)
+            return
+        super().save_model(request, obj, form, change)
+
+    def _approve_update(self, update):
+        if update.status == AppProfileUpdateRequest.STATUS_APPROVED and update.reviewed_at:
+            return False
+        user = update.user
+        old_mobile = user.username
+        user.username = update.mobile
+        user.first_name = update.name
+        user.save(update_fields=["username", "first_name"])
+        signup = AppSignupRequest.objects.filter(mobile=old_mobile).first()
+        if signup:
+            signup.name = update.name
+            signup.mobile = update.mobile
+            signup.city = update.city
+            signup.save(update_fields=["name", "mobile", "city"])
+        update.status = AppProfileUpdateRequest.STATUS_APPROVED
+        update.reviewed_at = timezone.now()
+        update.save(update_fields=["status", "reviewed_at"])
+        return True
+
+    @admin.action(description="Reject selected profile update requests")
+    def reject_requests(self, request, queryset):
+        updated = queryset.update(
+            status=AppProfileUpdateRequest.STATUS_REJECTED,
+            reviewed_at=timezone.now(),
+        )
+        self.message_user(request, f"{updated} profile update request(s) rejected.")
 
 
 # ============================================================
