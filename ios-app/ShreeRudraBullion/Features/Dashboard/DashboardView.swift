@@ -160,12 +160,16 @@ struct FloatingTabBar: View {
         }
         .padding(.horizontal, 6)
         .frame(height: 86)
-        .background(Color.white, in: RoundedRectangle(cornerRadius: 28))
+        .background(RoundedRectangle(cornerRadius: 28).fill(Color.white).shadow(color: .black.opacity(0.12), radius: 12, y: 4))
         .overlay(RoundedRectangle(cornerRadius: 28).stroke(Color.line.opacity(0.5), lineWidth: 1))
-        .shadow(color: .black.opacity(0.12), radius: 12, y: 4)
         .padding(.horizontal, 16)
         .padding(.top, 10)
         .padding(.bottom, 4)
+        .background {
+            // Fades scrolled content out behind the floating bar.
+            LinearGradient(colors: [Color.softSurface.opacity(0), Color.softSurface], startPoint: .top, endPoint: UnitPoint(x: 0.5, y: 0.35))
+                .ignoresSafeArea(edges: .bottom)
+        }
     }
 }
 
@@ -195,9 +199,8 @@ struct QuickContactActions: View {
         }
         .buttonStyle(.plain)
         .padding(6)
-        .background(Color.white, in: RoundedRectangle(cornerRadius: 18))
+        .background(RoundedRectangle(cornerRadius: 18).fill(Color.white).shadow(color: .black.opacity(0.14), radius: 10, y: 4))
         .overlay(RoundedRectangle(cornerRadius: 18).stroke(Color.line.opacity(0.55), lineWidth: 1))
-        .shadow(color: .black.opacity(0.14), radius: 10, y: 4)
     }
 }
 

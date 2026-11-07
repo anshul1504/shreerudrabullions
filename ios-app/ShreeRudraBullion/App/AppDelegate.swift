@@ -8,6 +8,9 @@ import UserNotifications
 final class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
         URLCache.shared = URLCache(memoryCapacity: 30 * 1024 * 1024, diskCapacity: 150 * 1024 * 1024)
+        if AppConfig.isUITesting {
+            SessionStore.shared.clear()
+        }
 
         if AppConfig.isFirebaseConfigured {
             FirebaseApp.configure()

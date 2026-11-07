@@ -140,8 +140,7 @@ struct RateRowCard: View {
             RateBox(value: row.sell, color: .sellRed, movement: sellMovement)
         }
         .padding(12)
-        .background(Color.white, in: RoundedRectangle(cornerRadius: 18))
-        .shadow(color: .black.opacity(0.06), radius: 3, y: 1)
+        .background(RoundedRectangle(cornerRadius: 18).fill(Color.white).shadow(color: .black.opacity(0.06), radius: 3, y: 1))
         .padding(.bottom, 9)
         .accessibilityElement(children: .combine)
     }

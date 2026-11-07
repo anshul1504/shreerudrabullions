@@ -232,12 +232,12 @@ struct SummaryRow: View {
             Text(label)
                 .font(.poppins(13, .bold))
                 .foregroundStyle(Color.muted)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(width: 118, alignment: .leading)
             Text(value.ifBlank("-"))
                 .font(.poppins(14, .extraBold))
                 .foregroundStyle(Color.dark)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .layoutPriority(1)
+                .fixedSize(horizontal: false, vertical: true)
         }
         .padding(.vertical, 5)
     }

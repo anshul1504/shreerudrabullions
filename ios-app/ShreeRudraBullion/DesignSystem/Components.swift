@@ -12,8 +12,7 @@ struct Panel<Content: View>: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(padding)
-        .background(Color.white, in: RoundedRectangle(cornerRadius: 18))
-        .shadow(color: .black.opacity(0.05), radius: 2, y: 1)
+        .background(RoundedRectangle(cornerRadius: 18).fill(Color.white).shadow(color: .black.opacity(0.05), radius: 2, y: 1))
     }
 }
 
@@ -29,9 +28,8 @@ struct BorderedCard<Content: View>: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(padding)
-        .background(Color.white, in: RoundedRectangle(cornerRadius: cornerRadius))
+        .background(RoundedRectangle(cornerRadius: cornerRadius).fill(Color.white).shadow(color: .black.opacity(shadow ? 0.06 : 0), radius: 3, y: 1))
         .overlay(RoundedRectangle(cornerRadius: cornerRadius).stroke(Color.line.opacity(0.55), lineWidth: 1))
-        .shadow(color: .black.opacity(shadow ? 0.06 : 0), radius: 3, y: 1)
     }
 }
 

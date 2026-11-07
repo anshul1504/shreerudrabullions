@@ -119,9 +119,8 @@ struct AuthPanel<Content: View>: View {
         }
         .padding(22)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.white, in: RoundedRectangle(cornerRadius: 28))
+        .background(RoundedRectangle(cornerRadius: 28).fill(Color.white).shadow(color: .black.opacity(0.25), radius: 12, y: 6))
         .overlay(RoundedRectangle(cornerRadius: 28).stroke(Color.line.opacity(0.55), lineWidth: 1))
-        .shadow(color: .black.opacity(0.25), radius: 12, y: 6)
     }
 }
 

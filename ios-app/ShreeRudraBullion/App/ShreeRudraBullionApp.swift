@@ -10,7 +10,6 @@ struct ShreeRudraBullionApp: App {
             RootView()
                 .environment(SessionStore.shared)
                 .tint(.gold)
-                .preferredColorScheme(.light)
                 .dynamicTypeSize(...DynamicTypeSize.xxLarge)
         }
         .onChange(of: scenePhase) { _, phase in
@@ -44,6 +43,8 @@ struct RootView: View {
                     .transition(.opacity)
             }
         }
+        // Splash and auth screens sit on the dark Om background, so they need a light status bar.
+        .preferredColorScheme(showSplash || !session.isLoggedIn ? .dark : .light)
         .animation(.easeInOut(duration: 0.25), value: showSplash)
         .animation(.easeInOut(duration: 0.25), value: session.isLoggedIn)
         .task {

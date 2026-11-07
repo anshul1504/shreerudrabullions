@@ -38,6 +38,16 @@
                ReferencedContainer = "container:ShreeRudraBullion.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A10000000000000000000103"
+               BuildableName = "ShreeRudraBullionUITests.xctest"
+               BlueprintName = "ShreeRudraBullionUITests"
+               ReferencedContainer = "container:ShreeRudraBullion.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

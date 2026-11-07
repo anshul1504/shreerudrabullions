@@ -11,4 +11,13 @@ enum AppConfig {
 
     static let isFirebaseConfigured: Bool =
         Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist") != nil
+
+    /// Set by UI tests (DEBUG builds only) to start signed out.
+    static let isUITesting: Bool = {
+        #if DEBUG
+        CommandLine.arguments.contains("--reset-session")
+        #else
+        false
+        #endif
+    }()
 }
