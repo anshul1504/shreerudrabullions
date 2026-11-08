@@ -9,37 +9,16 @@ struct LiveRatesView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
+            LiveRatesHeader(loading: loading) {
+                Task { await refresh(showLoader: true) }
+            }
+            .padding(.bottom, 12)
+
             if !error.isEmpty && data == nil {
                 ErrorCard(text: error)
             } else if loading && data == nil {
                 LoadingBox()
             } else if let rates = data {
-                HStack {
-                    Spacer()
-                    Button {
-                        Task { await refresh(showLoader: true) }
-                    } label: {
-                        HStack(spacing: 6) {
-                            if loading {
-                                ProgressView().tint(.white).controlSize(.small)
-                            } else {
-                                Image(systemName: "arrow.clockwise")
-                                    .font(.system(size: 14, weight: .semibold))
-                                Text("Refresh")
-                                    .font(.poppins(12, .extraBold))
-                            }
-                        }
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 14)
-                        .padding(.vertical, 9)
-                        .background(Color.dark, in: RoundedRectangle(cornerRadius: 14))
-                    }
-                    .buttonStyle(.plain)
-                    .disabled(loading)
-                    .accessibilityLabel("Refresh live rates")
-                }
-                .padding(.bottom, 8)
-
                 if !error.isEmpty {
                     MessageText(text: error)
                 }
@@ -153,18 +132,59 @@ struct RateBox: View {
 
     var body: some View {
         let moved = movement != 0 && !value.isBlank
-        let flash: Color = movement > 0 ? .flashUp : .flashDown
+        // Rate went up: green, went down: red. Only the number is highlighted; the box keeps its colour.
+        let highlight: Color = movement > 0 ? .flashUp : .flashDown
         Text(value.isBlank ? "-" : value)
             .font(.poppins(16, .extraBold))
-            .foregroundStyle(moved ? Color.white : color)
+            .foregroundStyle(moved ? highlight : color)
             .multilineTextAlignment(.center)
             .minimumScaleFactor(0.7)
-            .lineLimit(2)
+            .lineLimit(1)
             .padding(.horizontal, 6)
+            .padding(.vertical, 3)
+            .background(moved ? highlight.opacity(0.16) : .clear, in: RoundedRectangle(cornerRadius: 8))
+            .padding(.horizontal, 4)
             .padding(.vertical, 9)
             .frame(maxWidth: .infinity, minHeight: 68)
-            .background(moved ? flash : color.opacity(0.11), in: RoundedRectangle(cornerRadius: 14))
-            .overlay(RoundedRectangle(cornerRadius: 14).stroke(moved ? flash : color.opacity(0.22), lineWidth: 1))
+            .background(color.opacity(0.11), in: RoundedRectangle(cornerRadius: 14))
+            .overlay(RoundedRectangle(cornerRadius: 14).stroke(color.opacity(0.22), lineWidth: 1))
             .animation(.easeOut(duration: 0.25), value: moved)
+    }
+}
+
+struct LiveRatesHeader: View {
+    let loading: Bool
+    let onRefresh: () -> Void
+
+    var body: some View {
+        HStack(spacing: 12) {
+            AppLogo(size: 52, background: .surface)
+            Text("Live Rates")
+                .font(.poppins(20, .extraBold))
+                .foregroundStyle(Color.textDark)
+            Spacer(minLength: 8)
+            Button(action: onRefresh) {
+                HStack(spacing: 6) {
+                    if loading {
+                        ProgressView().tint(.white).controlSize(.small)
+                    } else {
+                        Image(systemName: "arrow.clockwise")
+                            .font(.system(size: 14, weight: .semibold))
+                        Text("Refresh")
+                            .font(.poppins(12, .extraBold))
+                    }
+                }
+                .foregroundStyle(.white)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 9)
+                .background(Color.dark.opacity(loading ? 0.75 : 1), in: RoundedRectangle(cornerRadius: 14))
+            }
+            .buttonStyle(.plain)
+            .disabled(loading)
+            .accessibilityLabel("Refresh live rates")
+        }
+        .padding(14)
+        .background(Color.white, in: RoundedRectangle(cornerRadius: 24))
+        .overlay(RoundedRectangle(cornerRadius: 24).stroke(Color.line.opacity(0.5), lineWidth: 1))
     }
 }

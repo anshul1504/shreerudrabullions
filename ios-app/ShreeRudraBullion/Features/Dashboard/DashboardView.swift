@@ -53,10 +53,6 @@ struct DashboardView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
                     Color.clear.frame(height: 0).id("top")
-                    if tab == .rates {
-                        DashboardHeader(tab: tab)
-                            .padding(.bottom, 12)
-                    }
                     content
                     Spacer().frame(height: 72)
                 }
@@ -201,57 +197,5 @@ struct QuickContactActions: View {
         .padding(6)
         .background(RoundedRectangle(cornerRadius: 18).fill(Color.white).shadow(color: .black.opacity(0.14), radius: 10, y: 4))
         .overlay(RoundedRectangle(cornerRadius: 18).stroke(Color.line.opacity(0.55), lineWidth: 1))
-    }
-}
-
-struct DashboardHeader: View {
-    let tab: DashboardTab
-
-    private var title: String {
-        switch tab {
-        case .home: "Welcome"
-        case .products: "Products"
-        case .about: "About Us"
-        case .profile: "My Account"
-        case .rates: "Live Rates"
-        }
-    }
-
-    private var subtitle: String {
-        switch tab {
-        case .home: "Hello, \(SessionStore.shared.userName.ifBlank("Customer"))"
-        case .products: "Explore our active website catalogue"
-        case .about: "Trusted bullion service and support"
-        case .profile: "Manage your account and enquiries"
-        case .rates: "Current bullion buy and sell rates"
-        }
-    }
-
-    var body: some View {
-        HStack(spacing: 12) {
-            AppLogo(size: 52, background: .surface)
-            VStack(alignment: .leading, spacing: 0) {
-                Text(title)
-                    .font(.poppins(20, .extraBold))
-                    .foregroundStyle(Color.textDark)
-                if tab != .rates {
-                    Text(subtitle)
-                        .font(.poppins(14))
-                        .foregroundStyle(Color.muted)
-                }
-            }
-            Spacer(minLength: 0)
-            if tab != .rates {
-                Text("Member")
-                    .font(.poppins(11, .bold))
-                    .foregroundStyle(Color.gold)
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 6)
-                    .background(Color.gold.opacity(0.12), in: RoundedRectangle(cornerRadius: 18))
-            }
-        }
-        .padding(14)
-        .background(Color.white, in: RoundedRectangle(cornerRadius: 24))
-        .overlay(RoundedRectangle(cornerRadius: 24).stroke(Color.line.opacity(0.5), lineWidth: 1))
     }
 }
