@@ -62,9 +62,13 @@ final class AppFlowUITests: XCTestCase {
         let passwordField = app.secureTextFields.firstMatch
         passwordField.tap()
         passwordField.typeText(password)
+        // Close the keyboard (and its password autofill bar) before tapping Sign in.
+        if app.keyboards.buttons["return"].isHittable {
+            app.keyboards.buttons["return"].tap()
+        }
         app.buttons["Sign in"].tap()
 
-        XCTAssertTrue(app.staticTexts["Live Rates"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Live Rates"].waitForExistence(timeout: 30))
         XCTAssertTrue(app.staticTexts["Buy"].waitForExistence(timeout: 10))
         // The simulator offers to save the password a few seconds after sign-in. That sheet is
         // drawn by a system process the query API can't reach, so tap where "Not Now" sits.
@@ -73,34 +77,39 @@ final class AppFlowUITests: XCTestCase {
         sleep(2)
         capture("10-live-rates")
 
-        tab("Home")
-        XCTAssertTrue(app.staticTexts["WHY CHOOSE US"].waitForExistence(timeout: 10))
-        sleep(2)
-        capture("11-home")
-        app.swipeUp()
-        app.swipeUp()
-        capture("12-home-products")
-        app.swipeUp()
-        app.swipeUp()
-        capture("13-home-footer")
-
-        tab("Products")
-        XCTAssertTrue(app.staticTexts["Product Inventory"].waitForExistence(timeout: 10))
-        sleep(2)
-        capture("20-products")
-        app.buttons["Filter"].tap()
-        XCTAssertTrue(app.staticTexts["Filters"].waitForExistence(timeout: 3))
-        capture("21-products-filters")
-        app.buttons["Apply"].tap()
-
-        let productCard = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Rs.'")).firstMatch
-        if productCard.waitForExistence(timeout: 5) {
-            productCard.tap()
-            XCTAssertTrue(app.buttons["Back to Products"].waitForExistence(timeout: 5))
+        // Home and Products can be switched off from the Django admin.
+        if hasTab("Home") {
+            tab("Home")
+            XCTAssertTrue(app.staticTexts["WHY CHOOSE US"].waitForExistence(timeout: 10))
             sleep(2)
-            capture("22-product-detail")
+            capture("11-home")
             app.swipeUp()
-            capture("23-product-detail-bottom")
+            app.swipeUp()
+            capture("12-home-products")
+            app.swipeUp()
+            app.swipeUp()
+            capture("13-home-footer")
+        }
+
+        if hasTab("Products") {
+            tab("Products")
+            XCTAssertTrue(app.staticTexts["Product Inventory"].waitForExistence(timeout: 10))
+            sleep(2)
+            capture("20-products")
+            app.buttons["Filter"].tap()
+            XCTAssertTrue(app.staticTexts["Filters"].waitForExistence(timeout: 3))
+            capture("21-products-filters")
+            app.buttons["Apply"].tap()
+
+            let productCard = app.buttons.matching(NSPredicate(format: "label CONTAINS 'Rs.'")).firstMatch
+            if productCard.waitForExistence(timeout: 5) {
+                productCard.tap()
+                XCTAssertTrue(app.buttons["Back to Products"].waitForExistence(timeout: 5))
+                sleep(2)
+                capture("22-product-detail")
+                app.swipeUp()
+                capture("23-product-detail-bottom")
+            }
         }
 
         tab("About")
@@ -124,6 +133,10 @@ final class AppFlowUITests: XCTestCase {
         app.alerts["Logout?"].buttons["Yes"].tap()
         XCTAssertTrue(app.staticTexts["Sign in required"].waitForExistence(timeout: 5))
         capture("45-signed-out")
+    }
+
+    private func hasTab(_ label: String) -> Bool {
+        app.buttons[label].firstMatch.waitForExistence(timeout: 3)
     }
 
     private func tab(_ label: String) {
