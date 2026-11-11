@@ -68,11 +68,16 @@ final class AppFlowUITests: XCTestCase {
         }
         app.buttons["Sign in"].tap()
 
-        XCTAssertTrue(app.staticTexts["Live Rates"].waitForExistence(timeout: 30))
+        // After sign-in the simulator may show a "Save Password?" sheet. It runs in a system
+        // process that hides the app from queries, so tap where its "Not Now" button sits until
+        // the dashboard shows. On the dashboard that spot is just a rate row.
+        let liveRates = app.staticTexts["Live Rates"]
+        for _ in 0..<8 where !liveRates.waitForExistence(timeout: 4) {
+            app.coordinate(withNormalizedOffset: CGVector(dx: 0.32, dy: 0.625)).tap()
+        }
+        XCTAssertTrue(liveRates.exists)
         XCTAssertTrue(app.staticTexts["Buy"].waitForExistence(timeout: 10))
-        // The simulator offers to save the password a few seconds after sign-in. That sheet is
-        // drawn by a system process the query API can't reach, so tap where "Not Now" sits.
-        sleep(8)
+        sleep(6)
         app.coordinate(withNormalizedOffset: CGVector(dx: 0.32, dy: 0.625)).tap()
         sleep(2)
         capture("10-live-rates")

@@ -44,29 +44,33 @@ struct AboutHero: View {
     let about: AboutInfo
 
     var body: some View {
-        ZStack(alignment: .bottomLeading) {
-            Color.dark
-            if !about.headerBackground.isEmpty {
-                RemoteImage(url: about.headerBackground)
-                Color.black.opacity(0.46)
+        VStack(alignment: .leading, spacing: 0) {
+            Text("ABOUT US")
+                .font(.poppins(13, .extraBold))
+                .foregroundStyle(Color.gold)
+                .padding(.bottom, 8)
+            Text(about.headerTitle.ifBlank("Shree Rudra Bullion & Jewels"))
+                .font(.poppins(25, .extraBold))
+                .foregroundStyle(.white)
+            if !about.headerSubtitle.isBlank {
+                Text(about.headerSubtitle)
+                    .font(.poppins(15))
+                    .foregroundStyle(.white.opacity(0.86))
             }
-            VStack(alignment: .leading, spacing: 0) {
-                Text("ABOUT US")
-                    .font(.poppins(13, .extraBold))
-                    .foregroundStyle(Color.gold)
-                    .padding(.bottom, 8)
-                Text(about.headerTitle.ifBlank("Shree Rudra Bullion & Jewels"))
-                    .font(.poppins(25, .extraBold))
-                    .foregroundStyle(.white)
-                if !about.headerSubtitle.isBlank {
-                    Text(about.headerSubtitle)
-                        .font(.poppins(15))
-                        .foregroundStyle(.white.opacity(0.86))
+        }
+        .fixedSize(horizontal: false, vertical: true)
+        .padding(22)
+        // At least 220 pt tall, and taller when the admin's subtitle needs more lines.
+        .frame(maxWidth: .infinity, minHeight: 220, alignment: .bottomLeading)
+        .background {
+            ZStack {
+                Color.dark
+                if !about.headerBackground.isEmpty {
+                    RemoteImage(url: about.headerBackground)
+                    Color.black.opacity(0.46)
                 }
             }
-            .padding(22)
         }
-        .frame(height: 220)
         .clipShape(RoundedRectangle(cornerRadius: 28))
     }
 }
