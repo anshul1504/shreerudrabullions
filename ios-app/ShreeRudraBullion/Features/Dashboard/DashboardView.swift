@@ -58,7 +58,10 @@ struct DashboardView: View {
                 }
                 .padding(.horizontal, 14)
                 .padding(.vertical, 10)
+                // Lock content to the screen width so the page never pans sideways.
+                .containerRelativeFrame(.horizontal)
             }
+            .scrollBounceBehavior(.basedOnSize, axes: .horizontal)
             .scrollDismissesKeyboard(.interactively)
             .background(Color.softSurface.ignoresSafeArea())
             .overlay(alignment: .bottomTrailing) {

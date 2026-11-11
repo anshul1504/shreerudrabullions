@@ -138,7 +138,7 @@ struct RateBox: View {
             .font(.poppins(16, .extraBold))
             .foregroundStyle(moved ? highlight : color)
             .multilineTextAlignment(.center)
-            .minimumScaleFactor(0.7)
+            .minimumScaleFactor(0.55)
             .lineLimit(1)
             .padding(.horizontal, 6)
             .padding(.vertical, 3)
